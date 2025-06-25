@@ -1,38 +1,213 @@
-.App {
+/* Contact Section Styling */
+.contact-section {
+  padding: 80px 50px;
+  background-color: #333;
+  color: #fff;
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.contact-section h2 {
+  font-size: 48px;
+  margin-bottom: 40px;
+  color: #ff3366;
+  text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5);
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.contact-form {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #444;
+  border-radius: 10px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.contact-form input,
+.contact-form textarea {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 20px;
+  border: none;
+  border-radius: 5px;
+  background-color: #222;
+  color: #fff;
+  font-size: 16px;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+.contact-form input::placeholder,
+.contact-form textarea::placeholder {
+  color: #aaa;
+}
+
+.contact-form button {
+  width: 100%;
+  padding: 15px;
+  background-color: #ff3366;
+  color: #fff;
+  font-size: 18px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.contact-form button:hover {
+  background-color: #e02554;
+}
+
+.success-message {
+  color: green;
+  margin-top: 1rem;
+}
+
+.error-message {
+  color: red;
+  margin-top: 1rem;
+}
+
+/* Footer Styling */
+.footer {
+  background-color: #333;
+  padding: 40px 0;
+  color: #fff;
+  text-align: center;
+}
+
+.footer-links {
+  list-style: none;
+  padding: 0;
+  margin-bottom: 20px;
   display: flex;
-  flex-direction: column;
+  flex-direction: inline;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
+  gap: 30px;
+}
+
+.footer-links li a {
   color: white;
+  text-decoration: none;
+  font-size: 16px;
+  transition: color 0.3s ease;
 }
 
-.App-link {
-  color: #61dafb;
+.footer-links li a:hover {
+  color: #ff3366;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+.footer-icons a {
+  font-size: 24px;
+  margin: 0 10px;
+  color: white;
+  transition: color 0.3s ease;
+}
+
+.footer-icons a:hover {
+  color: #ff3366;
+}
+/* General navbar styles */
+.navbar-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(to right, transparent, crimson);
+  padding: 15px 20px;
+  position: fixed;
+  width: 100%;
+  z-index: 1000;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 1);
+}
+
+.nav-logo {
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  width: 150px;
+  height: auto;
+}
+
+.menu-toggle {
+  display: none;
+  flex-direction: column;
+  cursor: pointer;
+  z-index: 1100;
+}
+
+.bar {
+  height: 3px;
+  width: 25px;
+  background-color: #fff;
+  margin: 4px 0;
+  transition: all 0.4s ease;
+}
+
+/* Cross animation */
+.menu-toggle.active .bar:nth-child(1) {
+  transform: rotate(45deg) translate(5px, 10px);
+}
+
+.menu-toggle.active .bar:nth-child(2) {
+  opacity: 0;
+}
+
+.menu-toggle.active .bar:nth-child(3) {
+  transform: rotate(-45deg) translate(5px, -10px);
+}
+
+/* Nav links - Desktop */
+.nav-list {
+  display: flex;
+  list-style: none;
+  gap: 15px;
+}
+
+.nav-list li {
+  display: inline-block;
+}
+
+.nav-list a {
+  color: white;
+  text-decoration: none;
+  font-size: 18px;
+  font-family: 'Poppins', Arial, sans-serif;
+  font-weight: 100;
+  letter-spacing: 0.5px;
+  transition: color 0.3s ease;
+}
+
+.nav-list a:hover {
+  color: rgb(0, 0, 0);
+}
+
+/* Mobile styles */
+@media (max-width: 768px) {
+  .nav-list {
+    display: none;
+    flex-direction: column;
+    position: absolute;
+    top: 70px;
+    background: linear-gradient(to left, transparent, crimson);
+    width: 100%;
+    text-align: left;
   }
-  to {
-    transform: rotate(360deg);
+
+  .nav-list.active {
+    display: flex;
+  }
+
+  .menu-toggle {
+    display: flex;
+  }
+
+  .nav-list li {
+    margin: 0;
+  }
+
+  .nav-list a {
+    font-size: 20px;
   }
 }
+
