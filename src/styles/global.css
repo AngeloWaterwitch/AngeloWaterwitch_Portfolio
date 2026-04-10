@@ -44,3 +44,8 @@ img {
   max-width: 100%;
   display: block;
 }
+
+@keyframes scrollPulse {
+  0%, 100% { opacity: 0.4; transform: scaleY(1); }
+  50%       { opacity: 1;   transform: scaleY(1.1); }
+}
