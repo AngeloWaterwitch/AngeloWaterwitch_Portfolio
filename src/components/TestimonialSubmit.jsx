@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { sanitise } from '../utils/sanitise';
 
 function TestimonialSubmit({ onSubmit, onClose }) {
   const [form, setForm] = useState({ author: '', role: '', quote: '' });
@@ -8,10 +9,14 @@ function TestimonialSubmit({ onSubmit, onClose }) {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = e => {
+const handleSubmit = e => {
     e.preventDefault();
     if (!form.author || !form.quote) return;
-    onSubmit(form);
+    onSubmit({
+      author: sanitise(form.author),
+      role: sanitise(form.role),
+      quote: sanitise(form.quote),
+    });
     setStatus('success');
     setForm({ author: '', role: '', quote: '' });
   };

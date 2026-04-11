@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import emailjs from 'emailjs-com';
+import { sanitise } from '../utils/sanitise';
 
 function Contact({ contact }) {
   const [form, setForm] = useState({ name: '', email: '', message: '' });
@@ -9,14 +10,20 @@ function Contact({ contact }) {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = e => {
+const handleSubmit = e => {
     e.preventDefault();
     setStatus('sending');
+
+    const clean = {
+      name: sanitise(form.name),
+      email: sanitise(form.email),
+      message: sanitise(form.message),
+    };
 
     emailjs.send(
       'service_4ygvl7n',
       'template_14pi014',
-      form,
+      clean,
       '66bbAvGf6kl0cQLvw'
     )
       .then(() => {
