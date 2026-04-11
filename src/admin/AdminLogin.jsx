@@ -5,7 +5,7 @@ function AdminLogin({ onLogin }) {
   const [error, setError] = useState('');
 
   const handleSubmit = () => {
-    if (password === 'admin123') {
+    if (password === 'Them@ng3lo') {
       onLogin();
     } else {
       setError('Incorrect password.');
@@ -41,15 +41,6 @@ function AdminLogin({ onLogin }) {
         flexDirection: 'column',
         gap: '1rem',
       }}>
-
-        <div style={{
-          fontFamily: 'var(--font-mono)',
-          fontSize: '0.72rem',
-          color: '#666',
-          letterSpacing: '0.1em',
-        }}>
-          Enter admin password
-        </div>
 
         <input
           type="password"
