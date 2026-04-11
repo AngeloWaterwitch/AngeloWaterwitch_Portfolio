@@ -9,9 +9,18 @@ import Services from './components/Services';
 import Testimonials from './components/Testimonials';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
+import Admin from './admin/Admin';
 
 function App() {
-  const { data, updateData } = useSiteData();
+  const {
+    data,
+    updateData,
+    pending,
+    submitTestimonial,
+    approvePending,
+    removePending,
+  } = useSiteData();
+
   const [adminOpen, setAdminOpen] = useState(false);
 
   useEffect(() => {
@@ -21,19 +30,44 @@ function App() {
     document.head.appendChild(link);
   }, []);
 
+  if (adminOpen) {
+    return (
+      <Admin
+        data={data}
+        onSave={updateData}
+        onClose={() => setAdminOpen(false)}
+        pending={pending}
+        onApprove={approvePending}
+        onRemovePending={removePending}
+      />
+    );
+  }
+
+  const sectionOrder = data.sections.map(s => s.id);
+
+  const renderSection = (id) => {
+    const visible = data.sections.find(s => s.id === id)?.visible;
+    if (!visible) return null;
+
+    switch (id) {
+      case 'home':         return <Hero         key={id} hero={data.hero} />;
+      case 'about':        return <About        key={id} about={data.about} />;
+      case 'skills':       return <Skills       key={id} skills={data.skills} />;
+      case 'projects':     return <Projects     key={id} projects={data.projects} />;
+      case 'services':     return <Services     key={id} services={data.services} />;
+    case 'testimonials': return <Testimonials key={id} testimonials={data.testimonials || []} onSubmit={submitTestimonial} />;
+      case 'contact':      return <Contact      key={id} contact={data.contact} />;
+      default:             return null;
+    }
+  };
+
   return (
     <div style={{ background: 'var(--dark)', minHeight: '100vh' }}>
       <Navbar
         sections={data.sections}
         onAdminClick={() => setAdminOpen(true)}
       />
-      <Hero hero={data.hero} />
-      <About about={data.about} />
-      <Skills skills={data.skills} />
-      <Projects projects={data.projects} />
-      <Services services={data.services} />
-      <Testimonials testimonials={data.testimonials} />
-      <Contact contact={data.contact} />
+      {sectionOrder.map(id => renderSection(id))}
       <Footer sections={data.sections} contact={data.contact} />
     </div>
   );

@@ -15,19 +15,19 @@ export const defaultData = {
     standing: "Distinction",
   },
 
-  skills: [
-    { icon: "⚛️", name: "React" },
-    { icon: "🎨", name: "CSS / Sass" },
-    { icon: "⚡", name: "JavaScript" },
-    { icon: "📐", name: "Figma" },
-    { icon: "🌐", name: "HTML5" },
-    { icon: "🗄️", name: "MySQL" },
-    { icon: "🐘", name: "PHP" },
-    { icon: "🟩", name: "Node.js" },
-    { icon: "🔷", name: "WordPress" },
-    { icon: "🔧", name: "TypeScript" },
+skills: [
+    { id: 's1',  icon: '⚛️', name: 'React' },
+    { id: 's2',  icon: '🎨', name: 'CSS / Sass' },
+    { id: 's3',  icon: '⚡', name: 'JavaScript' },
+    { id: 's4',  icon: '📐', name: 'Figma' },
+    { id: 's5',  icon: '🌐', name: 'HTML5' },
+    { id: 's6',  icon: '🗄️', name: 'MySQL' },
+    { id: 's7',  icon: '🐘', name: 'PHP' },
+    { id: 's8',  icon: '🟩', name: 'Node.js' },
+    { id: 's9',  icon: '🔷', name: 'WordPress' },
+    { id: 's10', icon: '🔧', name: 'TypeScript' },
   ],
-
+  
   projects: [
     {
       title: "Home Connect",

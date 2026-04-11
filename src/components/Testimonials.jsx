@@ -1,13 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
+import TestimonialSubmit from './TestimonialSubmit';
 
-function Testimonials({ testimonials }) {
+function Testimonials({ testimonials = [], onSubmit }) {
+  const [showForm, setShowForm] = useState(false);
+
   return (
     <section id="testimonials" style={{
       padding: '7rem 3rem',
       background: 'var(--dark2)',
     }}>
 
-      {/* Section tag */}
       <div style={{
         fontFamily: 'var(--font-mono)',
         fontSize: '0.75rem',
@@ -19,18 +21,26 @@ function Testimonials({ testimonials }) {
         Social Proof
       </div>
 
-      {/* Title */}
-      <h2 style={{
-        fontFamily: 'var(--font-display)',
-        fontSize: 'clamp(2rem, 5vw, 3.5rem)',
-        fontWeight: 800,
-        lineHeight: 1.05,
+      <div style={{
+        display: 'flex',
+        alignItems: 'flex-end',
+        justifyContent: 'space-between',
+        flexWrap: 'wrap',
+        gap: '1rem',
         marginBottom: '1rem',
       }}>
-        What Clients <span style={{ color: 'var(--cr-light)' }}>Say</span>
-      </h2>
+        <h2 style={{
+          fontFamily: 'var(--font-display)',
+          fontSize: 'clamp(2rem, 5vw, 3.5rem)',
+          fontWeight: 800,
+          lineHeight: 1.05,
+        }}>
+          What Clients <span style={{ color: 'var(--cr-light)' }}>Say</span>
+        </h2>
 
-      {/* Divider */}
+        <LeaveButton onClick={() => setShowForm(true)} />
+      </div>
+
       <div style={{
         width: '3rem',
         height: '2px',
@@ -38,7 +48,17 @@ function Testimonials({ testimonials }) {
         marginBottom: '3rem',
       }} />
 
-      {/* Grid */}
+      {testimonials.length === 0 && (
+        <p style={{
+          fontFamily: 'var(--font-mono)',
+          fontSize: '0.8rem',
+          color: '#555',
+          marginBottom: '2rem',
+        }}>
+          No testimonials yet — be the first!
+        </p>
+      )}
+
       <div style={{
         display: 'grid',
         gridTemplateColumns: 'repeat(auto-fill, minmax(420px, 1fr))',
@@ -48,7 +68,43 @@ function Testimonials({ testimonials }) {
           <TestimonialCard key={i} testimonial={t} />
         ))}
       </div>
+
+      {showForm && (
+        <TestimonialSubmit
+          onSubmit={(data) => {
+            onSubmit(data);
+            setShowForm(false);
+          }}
+          onClose={() => setShowForm(false)}
+        />
+      )}
     </section>
+  );
+}
+
+function LeaveButton({ onClick }) {
+  const [hovered, setHovered] = React.useState(false);
+  return (
+    <button
+      onClick={onClick}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{
+        fontFamily: 'var(--font-mono)',
+        fontSize: '0.75rem',
+        padding: '0.6rem 1.2rem',
+        background: 'transparent',
+        border: '1px solid ' + (hovered ? 'var(--cr-light)' : 'var(--dark4)'),
+        color: hovered ? 'var(--cr-light)' : '#666',
+        borderRadius: '1px',
+        cursor: 'pointer',
+        letterSpacing: '0.1em',
+        textTransform: 'uppercase',
+        transition: 'all 0.2s',
+      }}
+    >
+      + Leave a Testimonial
+    </button>
   );
 }
 
@@ -61,7 +117,7 @@ function TestimonialCard({ testimonial }) {
       onMouseLeave={() => setHovered(false)}
       style={{
         background: 'var(--dark3)',
-        border: `1px solid ${hovered ? 'var(--cr-dim)' : 'var(--dark4)'}`,
+        border: '1px solid ' + (hovered ? 'var(--cr-dim)' : 'var(--dark4)'),
         borderRadius: '2px',
         padding: '2rem',
         position: 'relative',
@@ -69,7 +125,6 @@ function TestimonialCard({ testimonial }) {
         transform: hovered ? 'translateY(-4px)' : 'translateY(0)',
       }}
     >
-      {/* Large quote mark */}
       <div style={{
         position: 'absolute',
         top: '0.5rem',
@@ -85,7 +140,6 @@ function TestimonialCard({ testimonial }) {
         "
       </div>
 
-      {/* Quote */}
       <p style={{
         fontSize: '0.95rem',
         color: '#aaa',
@@ -98,7 +152,6 @@ function TestimonialCard({ testimonial }) {
         {testimonial.quote}
       </p>
 
-      {/* Divider */}
       <div style={{
         width: '2rem',
         height: '1px',
@@ -106,14 +159,7 @@ function TestimonialCard({ testimonial }) {
         marginBottom: '1rem',
       }} />
 
-      {/* Author */}
-      <div style={{
-        display: 'flex',
-        alignItems: 'center',
-        gap: '0.8rem',
-      }}>
-
-        {/* Avatar circle with initials */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
         <div style={{
           width: '36px',
           height: '36px',
@@ -130,7 +176,6 @@ function TestimonialCard({ testimonial }) {
         }}>
           {testimonial.author.split(' ').map(n => n[0]).join('')}
         </div>
-
         <div>
           <div style={{
             fontFamily: 'var(--font-display)',

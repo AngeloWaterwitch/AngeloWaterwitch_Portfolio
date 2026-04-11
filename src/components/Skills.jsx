@@ -7,7 +7,6 @@ function Skills({ skills }) {
       background: 'var(--dark)',
     }}>
 
-      {/* Section tag */}
       <div style={{
         fontFamily: 'var(--font-mono)',
         fontSize: '0.75rem',
@@ -19,7 +18,6 @@ function Skills({ skills }) {
         What I Use
       </div>
 
-      {/* Title */}
       <h2 style={{
         fontFamily: 'var(--font-display)',
         fontSize: 'clamp(2rem, 5vw, 3.5rem)',
@@ -30,7 +28,6 @@ function Skills({ skills }) {
         My <span style={{ color: 'var(--cr-light)' }}>Skills</span>
       </h2>
 
-      {/* Divider */}
       <div style={{
         width: '3rem',
         height: '2px',
@@ -38,7 +35,6 @@ function Skills({ skills }) {
         marginBottom: '1.5rem',
       }} />
 
-      {/* Description */}
       <p style={{
         color: '#888',
         fontSize: '1rem',
@@ -50,14 +46,23 @@ function Skills({ skills }) {
         tools to produce the best products for my clients.
       </p>
 
-      {/* Skills grid */}
+      {skills.length === 0 && (
+        <p style={{
+          fontFamily: 'var(--font-mono)',
+          fontSize: '0.8rem',
+          color: '#555',
+        }}>
+          No skills added yet — add some from the admin dashboard.
+        </p>
+      )}
+
       <div style={{
         display: 'grid',
         gridTemplateColumns: 'repeat(auto-fill, minmax(120px, 1fr))',
         gap: '1rem',
       }}>
         {skills.map((skill, i) => (
-          <SkillCard key={i} skill={skill} />
+          <SkillCard key={skill.id || i} skill={skill} />
         ))}
       </div>
     </section>
@@ -73,7 +78,7 @@ function SkillCard({ skill }) {
       onMouseLeave={() => setHovered(false)}
       style={{
         background: 'var(--dark3)',
-        border: `1px solid ${hovered ? 'var(--cr-dim)' : 'var(--dark4)'}`,
+        border: '1px solid ' + (hovered ? 'var(--cr-dim)' : 'var(--dark4)'),
         padding: '1.5rem 1rem',
         borderRadius: '2px',
         textAlign: 'center',
@@ -82,13 +87,30 @@ function SkillCard({ skill }) {
         cursor: 'default',
       }}
     >
-      <span style={{
-        fontSize: '2rem',
-        display: 'block',
-        marginBottom: '0.6rem',
-      }}>
-        {skill.icon}
-      </span>
+      {/* Icon — either emoji or image URL */}
+      {skill.icon && skill.icon.startsWith('http') ? (
+        <img
+          src={skill.icon}
+          alt={skill.name}
+          style={{
+            width: '2rem',
+            height: '2rem',
+            objectFit: 'contain',
+            display: 'block',
+            margin: '0 auto 0.6rem',
+          }}
+          onError={e => { e.currentTarget.style.display = 'none'; }}
+        />
+      ) : (
+        <span style={{
+          fontSize: '2rem',
+          display: 'block',
+          marginBottom: '0.6rem',
+        }}>
+          {skill.icon}
+        </span>
+      )}
+
       <div style={{
         fontFamily: 'var(--font-mono)',
         fontSize: '0.7rem',
