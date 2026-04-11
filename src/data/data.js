@@ -6,6 +6,14 @@ branding: {
     logoUrl: '',
   },
 
+seo: {
+    title: 'Angelo Waterwitch — Software & Design Engineer',
+    description: 'Portfolio of Angelo Waterwitch, a software and design engineering student based in Cape Town, South Africa. Specialising in React, UI/UX, and creative digital experiences.',
+    keywords: 'Angelo Waterwitch, web developer, software engineer, design engineer, React, Cape Town, portfolio',
+    ogImage: '',
+    twitterHandle: '@yeah_itsangelo',
+  },
+
   hero: {
     name: "Angelo Waterwitch",
     role: "Software & Design Engineer",

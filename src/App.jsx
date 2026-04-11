@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import SEO from './components/SEO';
 import { useSiteData } from './data/useSiteData';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
@@ -93,8 +94,9 @@ function App() {
     }
   };
 
-  return (
+return (
     <div style={{ background: 'var(--dark)', minHeight: '100vh' }}>
+      <SEO seo={data.seo} branding={data.branding} />
       <Navbar
         sections={data.sections}
         branding={data.branding}

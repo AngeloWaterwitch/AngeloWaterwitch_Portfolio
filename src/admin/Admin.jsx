@@ -74,6 +74,62 @@ function Admin({ onClose, data, onSave, pending, onApprove, onRemovePending }) {
       {/* Body */}
       <div style={{ padding: '2rem', maxWidth: '900px', margin: '0 auto' }}>
 
+        {/* SEO */}
+        <AdminLabel>SEO & Meta Tags</AdminLabel>
+        <AdminGrid>
+          <AdminField
+            label="Page Title"
+            value={local.seo?.title || ''}
+            onChange={v => set('seo.title', v)}
+            fullWidth
+          />
+          <AdminField
+            label="Meta Description"
+            value={local.seo?.description || ''}
+            onChange={v => set('seo.description', v)}
+            textarea
+            fullWidth
+          />
+          <AdminField
+            label="Keywords (comma separated)"
+            value={local.seo?.keywords || ''}
+            onChange={v => set('seo.keywords', v)}
+            fullWidth
+          />
+          <AdminField
+            label="OG Image URL (for link previews)"
+            value={local.seo?.ogImage || ''}
+            onChange={v => set('seo.ogImage', v)}
+          />
+          <AdminField
+            label="Twitter Handle"
+            value={local.seo?.twitterHandle || ''}
+            onChange={v => set('seo.twitterHandle', v)}
+          />
+        </AdminGrid>
+        <div style={{
+          background: 'var(--dark3)',
+          border: '1px solid var(--dark4)',
+          borderRadius: '2px',
+          padding: '1rem 1.2rem',
+          marginBottom: '1rem',
+          fontFamily: 'var(--font-mono)',
+          fontSize: '0.72rem',
+          color: '#555',
+          lineHeight: 1.7,
+        }}>
+          💡 After deploying to Vercel, submit your URL to{' '}
+          <a
+            href="https://search.google.com/search-console"
+            target="_blank"
+            rel="noreferrer"
+            style={{ color: 'var(--cr-light)' }}
+          >
+            Google Search Console
+          </a>
+          {' '}for better search visibility.
+        </div>
+
         {/* Branding */}
         <AdminLabel>Branding</AdminLabel>
         <AdminGrid>
