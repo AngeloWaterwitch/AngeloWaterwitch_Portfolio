@@ -74,6 +74,57 @@ function Admin({ onClose, data, onSave, pending, onApprove, onRemovePending }) {
       {/* Body */}
       <div style={{ padding: '2rem', maxWidth: '900px', margin: '0 auto' }}>
 
+        {/* Branding */}
+        <AdminLabel>Branding</AdminLabel>
+        <AdminGrid>
+          <AdminField
+            label="Logo Text (shown if no image)"
+            value={local.branding?.logoText || ''}
+            onChange={v => set('branding.logoText', v)}
+          />
+          <AdminField
+            label="Logo Image URL (optional)"
+            value={local.branding?.logoUrl || ''}
+            onChange={v => set('branding.logoUrl', v)}
+          />
+        </AdminGrid>
+
+        <AdminLabel>Display Font</AdminLabel>
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))',
+          gap: '0.8rem',
+          marginBottom: '1.5rem',
+        }}>
+          {['Syne', 'Inter', 'Playfair Display', 'Raleway', 'Oswald'].map(font => (
+            <FontOption
+              key={font}
+              font={font}
+              selected={local.branding?.displayFont === font}
+              onClick={() => set('branding.displayFont', font)}
+              type="display"
+            />
+          ))}
+        </div>
+
+        <AdminLabel>Mono Font</AdminLabel>
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))',
+          gap: '0.8rem',
+          marginBottom: '1.5rem',
+        }}>
+          {['Space Mono', 'Fira Code', 'JetBrains Mono'].map(font => (
+            <FontOption
+              key={font}
+              font={font}
+              selected={local.branding?.monoFont === font}
+              onClick={() => set('branding.monoFont', font)}
+              type="mono"
+            />
+          ))}
+        </div>
+
         {/* Section order */}
         <AdminLabel>Section Order and Visibility</AdminLabel>
         <p style={{
@@ -650,6 +701,42 @@ function Toggle({ checked, onChange }) {
         borderRadius: '50%',
         transition: 'left 0.2s',
       }} />
+    </div>
+  );
+}
+
+function FontOption({ font, selected, onClick, type }) {
+  const [hovered, setHovered] = useState(false);
+  return (
+    <div
+      onClick={onClick}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{
+        background: selected ? 'var(--cr-dim)' : 'var(--dark3)',
+        border: '1px solid ' + (selected ? 'var(--cr)' : hovered ? 'var(--cr-dim)' : 'var(--dark4)'),
+        borderRadius: '2px',
+        padding: '0.8rem 1rem',
+        cursor: 'pointer',
+        transition: 'all 0.2s',
+      }}
+    >
+      <div style={{
+        fontFamily: type === 'mono' ? "'" + font + "', monospace" : "'" + font + "', sans-serif",
+        fontSize: '1rem',
+        color: selected ? 'var(--cr-light)' : 'var(--light)',
+        marginBottom: '0.3rem',
+      }}>
+        Aa Bb Cc
+      </div>
+      <div style={{
+        fontFamily: 'var(--font-mono)',
+        fontSize: '0.68rem',
+        color: selected ? 'var(--cr-light)' : '#666',
+        letterSpacing: '0.08em',
+      }}>
+        {font}
+      </div>
     </div>
   );
 }

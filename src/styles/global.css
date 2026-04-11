@@ -49,3 +49,15 @@ img {
   0%, 100% { opacity: 0.4; transform: scaleY(1); }
   50%       { opacity: 1;   transform: scaleY(1.1); }
 }
+
+
+/* Font switcher options */
+.font-syne        { --font-display: 'Syne', sans-serif; }
+.font-inter       { --font-display: 'Inter', sans-serif; }
+.font-playfair    { --font-display: 'Playfair Display', serif; }
+.font-raleway     { --font-display: 'Raleway', sans-serif; }
+.font-oswald      { --font-display: 'Oswald', sans-serif; }
+
+.mono-space-mono  { --font-mono: 'Space Mono', monospace; }
+.mono-fira-code   { --font-mono: 'Fira Code', monospace; }
+.mono-jetbrains   { --font-mono: 'JetBrains Mono', monospace; }

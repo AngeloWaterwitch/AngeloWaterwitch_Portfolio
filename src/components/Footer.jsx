@@ -1,6 +1,6 @@
 import React from 'react';
 
-function Footer({ sections, contact }) {
+function Footer({ sections, contact, branding }) {
   const visibleSections = sections.filter(s => s.visible);
 
   const socials = [
@@ -29,16 +29,25 @@ function Footer({ sections, contact }) {
 
         {/* Logo + tagline */}
         <div>
-          <div style={{
-            fontFamily: 'var(--font-display)',
-            fontSize: '1.5rem',
-            fontWeight: 800,
-            color: 'var(--cr-light)',
-            letterSpacing: '0.08em',
-            marginBottom: '0.5rem',
-          }}>
-            AW.
-          </div>
+       <div style={{
+        fontFamily: 'var(--font-display)',
+        fontSize: '1.5rem',
+        fontWeight: 800,
+        color: 'var(--cr-light)',
+        letterSpacing: '0.08em',
+        marginBottom: '0.5rem',
+      }}>
+        {branding?.logoUrl ? (
+          <img
+            src={branding.logoUrl}
+            alt="Logo"
+            style={{ height: '40px', width: 'auto', objectFit: 'contain' }}
+            onError={e => { e.currentTarget.style.display = 'none'; }}
+          />
+        ) : (
+          branding?.logoText || 'AW.'
+        )}
+      </div>
           <p style={{
             fontFamily: 'var(--font-mono)',
             fontSize: '0.72rem',

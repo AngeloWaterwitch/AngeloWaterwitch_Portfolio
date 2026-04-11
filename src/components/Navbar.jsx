@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-function Navbar({ sections, onAdminClick }) {
+function Navbar({ sections, onAdminClick, branding }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
@@ -37,14 +37,26 @@ function Navbar({ sections, onAdminClick }) {
     }}>
 
       {/* Logo */}
-      <a href="#home" style={{
+<a href="#home" style={{
         fontFamily: 'var(--font-display)',
         fontSize: '1.1rem',
         fontWeight: 800,
         color: 'var(--cr-light)',
         letterSpacing: '0.08em',
+        display: 'flex',
+        alignItems: 'center',
+        gap: '0.5rem',
       }}>
-        AW.
+        {branding?.logoUrl ? (
+          <img
+            src={branding.logoUrl}
+            alt="Logo"
+            style={{ height: '36px', width: 'auto', objectFit: 'contain' }}
+            onError={e => { e.currentTarget.style.display = 'none'; }}
+          />
+        ) : (
+          branding?.logoText || 'AW.'
+        )}
       </a>
 
       {/* Desktop Links */}

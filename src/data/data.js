@@ -1,4 +1,11 @@
 export const defaultData = {
+branding: {
+    displayFont: 'Syne',
+    monoFont: 'Space Mono',
+    logoText: 'AW.',
+    logoUrl: '',
+  },
+
   hero: {
     name: "Angelo Waterwitch",
     role: "Software & Design Engineer",
@@ -27,7 +34,7 @@ skills: [
     { id: 's9',  icon: '🔷', name: 'WordPress' },
     { id: 's10', icon: '🔧', name: 'TypeScript' },
   ],
-  
+
   projects: [
     {
       title: "Home Connect",
