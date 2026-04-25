@@ -92,6 +92,33 @@ skills: [
     },
   ],
 
+  timeline: [
+    {
+      id: 't1',
+      type: 'education',
+      title: 'Software & Design Engineering',
+      organisation: 'CPUT — Cape Peninsula University of Technology',
+      period: '2023 — Present',
+      desc: 'Studying software and design engineering with a focus on full-stack development, UI/UX design, and creative digital solutions.',
+    },
+    {
+      id: 't2',
+      type: 'education',
+      title: 'National Senior Certificate',
+      organisation: 'High School',
+      period: '2018 — 2022',
+      desc: 'Completed matric with a focus on IT and design subjects.',
+    },
+    {
+      id: 't3',
+      type: 'work',
+      title: 'Freelance Web Developer & Designer',
+      organisation: 'Self Employed',
+      period: '2022 — Present',
+      desc: 'Building websites and brand identities for local businesses and individuals across Cape Town.',
+    },
+  ],
+
   testimonials: [
     {
       quote: "Angelo delivered beyond our expectations. His attention to detail and design sensibility is remarkable.",
@@ -131,6 +158,7 @@ skills: [
     { id: "skills",       label: "Skills",        visible: true },
     { id: "projects",     label: "Projects",      visible: true },
     { id: "services",     label: "Services",      visible: true },
+    { id: 'timeline',     label: 'Timeline',      visible: true },
     { id: "testimonials", label: "Testimonials",  visible: true },
     { id: "contact",      label: "Contact",       visible: true },
   ],

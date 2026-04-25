@@ -7,6 +7,7 @@ import About from './components/About';
 import Skills from './components/Skills';
 import Projects from './components/Projects';
 import Services from './components/Services';
+import Timeline from './components/Timeline';
 import Testimonials from './components/Testimonials';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
@@ -88,6 +89,7 @@ function App() {
       case 'skills':       return <Skills       key={id} skills={data.skills} />;
       case 'projects':     return <Projects     key={id} projects={data.projects} />;
       case 'services':     return <Services     key={id} services={data.services} />;
+      case 'timeline':     return <Timeline     key={id} timeline={data.timeline || []} />;
       case 'testimonials': return <Testimonials key={id} testimonials={data.testimonials || []} onSubmit={submitTestimonial} />;
       case 'contact':      return <Contact      key={id} contact={data.contact} />;
       default:             return null;

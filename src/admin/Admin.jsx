@@ -590,6 +590,138 @@ function Admin({ onClose, data, onSave, pending, onApprove, onRemovePending }) {
           + Add Skill
         </button>
 
+{/* Timeline */}
+        <AdminLabel>Timeline</AdminLabel>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+          {(local.timeline || []).map((item, i) => (
+            <div key={item.id || i} style={{
+              background: 'var(--dark3)',
+              border: '1px solid var(--dark4)',
+              borderRadius: '2px',
+              padding: '1.2rem',
+            }}>
+              <AdminGrid>
+                <AdminField
+                  label="Title"
+                  value={item.title}
+                  onChange={v => {
+                    const arr = [...local.timeline];
+                    arr[i] = { ...arr[i], title: v };
+                    set('timeline', arr);
+                  }}
+                />
+                <AdminField
+                  label="Organisation"
+                  value={item.organisation}
+                  onChange={v => {
+                    const arr = [...local.timeline];
+                    arr[i] = { ...arr[i], organisation: v };
+                    set('timeline', arr);
+                  }}
+                />
+                <AdminField
+                  label="Period (e.g. 2022 — Present)"
+                  value={item.period}
+                  onChange={v => {
+                    const arr = [...local.timeline];
+                    arr[i] = { ...arr[i], period: v };
+                    set('timeline', arr);
+                  }}
+                />
+                <div>
+                  <div style={{
+                    fontFamily: 'var(--font-mono)',
+                    fontSize: '0.68rem',
+                    color: '#666',
+                    letterSpacing: '0.1em',
+                    textTransform: 'uppercase',
+                    marginBottom: '0.4rem',
+                  }}>
+                    Type
+                  </div>
+                  <select
+                    value={item.type}
+                    onChange={e => {
+                      const arr = [...local.timeline];
+                      arr[i] = { ...arr[i], type: e.target.value };
+                      set('timeline', arr);
+                    }}
+                    style={{
+                      width: '100%',
+                      background: 'var(--dark)',
+                      border: '1px solid var(--dark4)',
+                      color: 'var(--light)',
+                      padding: '0.6rem 0.8rem',
+                      fontFamily: 'var(--font-display)',
+                      fontSize: '0.85rem',
+                      borderRadius: '1px',
+                      outline: 'none',
+                    }}
+                  >
+                    <option value="work">Work</option>
+                    <option value="education">Education</option>
+                  </select>
+                </div>
+                <AdminField
+                  label="Description"
+                  value={item.desc}
+                  onChange={v => {
+                    const arr = [...local.timeline];
+                    arr[i] = { ...arr[i], desc: v };
+                    set('timeline', arr);
+                  }}
+                  textarea
+                  fullWidth
+                />
+              </AdminGrid>
+              <button
+                onClick={() => {
+                  const arr = local.timeline.filter((_, j) => j !== i);
+                  set('timeline', arr);
+                }}
+                style={{
+                  marginTop: '0.5rem',
+                  padding: '0.4rem 0.8rem',
+                  background: 'transparent',
+                  border: '1px solid #333',
+                  color: '#666',
+                  fontFamily: 'var(--font-mono)',
+                  fontSize: '0.72rem',
+                  borderRadius: '1px',
+                  cursor: 'pointer',
+                }}
+              >
+                Remove
+              </button>
+            </div>
+          ))}
+          <button
+            onClick={() => {
+              const arr = [...(local.timeline || []), {
+                id: 'tl' + Date.now(),
+                type: 'work',
+                title: 'New Role',
+                organisation: 'Company Name',
+                period: '2024 — Present',
+                desc: 'Description of your role here.',
+              }];
+              set('timeline', arr);
+            }}
+            style={{
+              padding: '0.8rem',
+              background: 'transparent',
+              border: '1px dashed var(--dark4)',
+              color: '#666',
+              fontFamily: 'var(--font-display)',
+              fontSize: '0.85rem',
+              borderRadius: '1px',
+              cursor: 'pointer',
+            }}
+          >
+            + Add Timeline Entry
+          </button>
+        </div>
+
         {/* Contact */}
         <AdminLabel>Contact Info</AdminLabel>
         <AdminGrid>
