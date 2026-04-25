@@ -56,8 +56,8 @@ export function useSiteData() {
       detail,
       timestamp: new Date().toISOString(),
     };
-    const updated = [entry, ...activity].slice(0, 50);
-    setActivity(updated);
+    const updated = [entry, ...activityLog].slice(0, 50);
+    setActivityLog(updated);
     try {
       localStorage.setItem(ACTIVITY_KEY, JSON.stringify(updated));
     } catch {
@@ -171,6 +171,6 @@ return {
     saveMessage,
     markMessageRead,
     deleteMessage,
-    activity,
+    activityLog,
   };
 }

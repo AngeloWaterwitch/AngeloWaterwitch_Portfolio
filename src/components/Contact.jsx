@@ -1,30 +1,32 @@
-import { contactSchema, validate } from '../utils/validation';
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import emailjs from 'emailjs-com';
 import { sanitise } from '../utils/sanitise';
+import { validate } from '../utils/validation';
 
 function Contact({ contact, onMessage }) {
-  const [errors, setErrors] = useState({});
   const [form, setForm] = useState({ name: '', email: '', message: '', honeypot: '' });
   const [status, setStatus] = useState(null);
+  const [errors, setErrors] = useState({});
 
   const handleChange = e => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-const handleSubmit = e => {
+  const handleSubmit = e => {
     e.preventDefault();
+    e.stopPropagation();
+
     if (form.honeypot) return;
 
-    const { valid, errors: validationErrors } = validate(contactSchema, {
-      name: form.name,
-      email: form.email,
-      message: form.message,
+    const result = validate('contact', {
+      name: form.name.trim(),
+      email: form.email.trim(),
+      message: form.message.trim(),
     });
 
-    if (!valid) {
-      setErrors(validationErrors);
+    if (!result.valid) {
+      setErrors(result.errors);
       return;
     }
 
@@ -202,9 +204,9 @@ const handleSubmit = e => {
             padding: 'clamp(1.2rem, 4vw, 2rem)',
           }}
         >
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit} noValidate>
 
-            {/* Honeypot — hidden from real users */}
+            {/* Honeypot */}
             <div style={{ display: 'none' }}>
               <input
                 type="text"
@@ -216,7 +218,7 @@ const handleSubmit = e => {
               />
             </div>
 
-<ContactField
+            <ContactField
               label="Name"
               type="text"
               name="name"

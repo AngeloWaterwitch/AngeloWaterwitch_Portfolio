@@ -1,4 +1,4 @@
-import { testimonialSchema, validate } from '../utils/validation';
+import { validate } from '../utils/validation';
 import React, { useState } from 'react';
 import { sanitise } from '../utils/sanitise';
 
@@ -14,7 +14,7 @@ function TestimonialSubmit({ onSubmit, onClose }) {
 const handleSubmit = e => {
     e.preventDefault();
 
-    const { valid, errors: validationErrors } = validate(testimonialSchema, {
+    const { valid, errors: validationErrors } = validate('testimonial', {
       author: form.author,
       role: form.role,
       quote: form.quote,
@@ -142,7 +142,7 @@ const handleSubmit = e => {
             </button>
           </div>
         ) : (
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit} noValidate>
             <div style={{ marginBottom: '1.2rem' }}>
               <label style={{
                 display: 'block',
@@ -161,7 +161,6 @@ const handleSubmit = e => {
                 placeholder="Jane Smith"
                 value={form.author}
                 onChange={handleChange}
-                required
                 style={{
                   width: '100%',
                   background: 'var(--dark)',
@@ -236,7 +235,6 @@ const handleSubmit = e => {
                 placeholder="Tell others about your experience working with Angelo..."
                 value={form.quote}
                 onChange={handleChange}
-                required
                 rows={4}
                 style={{
                   width: '100%',
