@@ -1,170 +1,220 @@
 import React from 'react';
+import { motion } from 'framer-motion';
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 40 },
+  visible: (i = 0) => ({
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.6, delay: i * 0.15 },
+  }),
+};
 
 function About({ about }) {
   return (
     <section id="about" style={{
-      padding: '7rem 3rem',
+      padding: 'clamp(4rem, 8vw, 7rem) clamp(1.5rem, 5vw, 3rem)',
       background: 'var(--dark2)',
-      display: 'grid',
-      gridTemplateColumns: '1fr 1fr',
-      gap: '5rem',
-      alignItems: 'center',
     }}>
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 400px), 1fr))',
+        gap: 'clamp(2rem, 5vw, 5rem)',
+        alignItems: 'center',
+        maxWidth: '1200px',
+        margin: '0 auto',
+      }}>
 
-      {/* Left — Image side */}
-      <div style={{ position: 'relative' }}>
+        {/* Left — Image */}
+        <motion.div
+          variants={fadeUp}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          custom={0}
+          style={{ position: 'relative' }}
+        >
+          <div style={{
+            position: 'absolute',
+            top: '-1rem',
+            right: '-1rem',
+            width: '5rem',
+            height: '5rem',
+            border: '2px solid var(--cr)',
+            borderRadius: '2px',
+            opacity: 0.4,
+            zIndex: 0,
+          }} />
+          <div style={{
+            position: 'absolute',
+            bottom: '-1rem',
+            left: '-1rem',
+            width: '3rem',
+            height: '3rem',
+            background: 'var(--cr)',
+            borderRadius: '2px',
+            opacity: 0.3,
+            zIndex: 0,
+          }} />
+          <div style={{
+            position: 'relative',
+            width: '100%',
+            aspectRatio: '3 / 4',
+            background: 'var(--dark3)',
+            border: '1px solid var(--dark4)',
+            borderRadius: '2px',
+            overflow: 'hidden',
+            zIndex: 1,
+            maxHeight: '500px',
+          }}>
+            <img
+              src="/images/gelo.png"
+              alt="Angelo Waterwitch"
+              style={{
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover',
+              }}
+              onError={e => { e.currentTarget.style.display = 'none'; }}
+            />
+            <div style={{
+              position: 'absolute',
+              inset: 0,
+              background: 'linear-gradient(to top, var(--cr-dim) 0%, transparent 50%)',
+              zIndex: 2,
+            }} />
+          </div>
+        </motion.div>
 
-        {/* Decorative top-right border accent */}
-        <div style={{
-          position: 'absolute',
-          top: '-1rem',
-          right: '-1rem',
-          width: '5rem',
-          height: '5rem',
-          border: '2px solid var(--cr)',
-          borderRadius: '2px',
-          opacity: 0.4,
-          zIndex: 0,
-        }} />
-
-        {/* Decorative bottom-left filled accent */}
-        <div style={{
-          position: 'absolute',
-          bottom: '-1rem',
-          left: '-1rem',
-          width: '3rem',
-          height: '3rem',
-          background: 'var(--cr)',
-          borderRadius: '2px',
-          opacity: 0.3,
-          zIndex: 0,
-        }} />
-
-        {/* Image frame */}
-        <div style={{
-          position: 'relative',
-          width: '100%',
-          aspectRatio: '3 / 4',
-          background: 'var(--dark3)',
-          border: '1px solid var(--dark4)',
-          borderRadius: '2px',
-          overflow: 'hidden',
-          zIndex: 1,
-        }}>
-          <img
-            src="/images/gelo.png"
-            alt="Angelo Waterwitch"
+        {/* Right — Text */}
+        <div>
+          <motion.div
+            variants={fadeUp}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            custom={0}
             style={{
-              width: '100%',
-              height: '100%',
-              objectFit: 'cover',
+              fontFamily: 'var(--font-mono)',
+              fontSize: '0.75rem',
+              color: 'var(--cr-light)',
+              letterSpacing: '0.25em',
+              textTransform: 'uppercase',
+              marginBottom: '1rem',
             }}
-            onError={e => {
-              e.currentTarget.style.display = 'none';
+          >
+            Who I Am
+          </motion.div>
+
+          <motion.h2
+            variants={fadeUp}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            custom={1}
+            style={{
+              fontFamily: 'var(--font-display)',
+              fontSize: 'clamp(2rem, 5vw, 3.5rem)',
+              fontWeight: 800,
+              lineHeight: 1.05,
+              marginBottom: '1rem',
+            }}
+          >
+            About{' '}
+            <span style={{ color: 'var(--cr-light)' }}>Me</span>
+          </motion.h2>
+
+          <motion.div
+            variants={fadeUp}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            custom={2}
+            style={{
+              width: '3rem',
+              height: '2px',
+              background: 'var(--cr)',
+              marginBottom: '2rem',
             }}
           />
 
-          {/* Gradient overlay at bottom */}
-          <div style={{
-            position: 'absolute',
-            inset: 0,
-            background: 'linear-gradient(to top, var(--cr-dim) 0%, transparent 50%)',
-            zIndex: 2,
-          }} />
-        </div>
-      </div>
+          <motion.p
+            variants={fadeUp}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            custom={3}
+            style={{
+              color: '#999',
+              lineHeight: 1.8,
+              marginBottom: '1.2rem',
+              fontSize: 'clamp(0.9rem, 2vw, 1rem)',
+            }}
+          >
+            {about.bio1}
+          </motion.p>
 
-      {/* Right — Text side */}
-      <div>
+          <motion.p
+            variants={fadeUp}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            custom={4}
+            style={{
+              color: '#999',
+              lineHeight: 1.8,
+              marginBottom: '2rem',
+              fontSize: 'clamp(0.9rem, 2vw, 1rem)',
+            }}
+          >
+            {about.bio2}
+          </motion.p>
 
-        {/* Section tag */}
-        <div style={{
-          fontFamily: 'var(--font-mono)',
-          fontSize: '0.75rem',
-          color: 'var(--cr-light)',
-          letterSpacing: '0.25em',
-          textTransform: 'uppercase',
-          marginBottom: '1rem',
-        }}>
-          Who I Am
-        </div>
-
-        {/* Title */}
-        <h2 style={{
-          fontFamily: 'var(--font-display)',
-          fontSize: 'clamp(2rem, 5vw, 3.5rem)',
-          fontWeight: 800,
-          lineHeight: 1.05,
-          marginBottom: '1rem',
-        }}>
-          About{' '}
-          <span style={{ color: 'var(--cr-light)' }}>Me</span>
-        </h2>
-
-        {/* Divider */}
-        <div style={{
-          width: '3rem',
-          height: '2px',
-          background: 'var(--cr)',
-          marginBottom: '2rem',
-        }} />
-
-        {/* Bio paragraphs */}
-        <p style={{
-          color: '#999',
-          lineHeight: 1.8,
-          marginBottom: '1.2rem',
-          fontSize: '1rem',
-        }}>
-          {about.bio1}
-        </p>
-
-        <p style={{
-          color: '#999',
-          lineHeight: 1.8,
-          marginBottom: '2rem',
-          fontSize: '1rem',
-        }}>
-          {about.bio2}
-        </p>
-
-        {/* Stats grid */}
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: '1fr 1fr',
-          gap: '1rem',
-        }}>
-          {[
-            { value: about.years,    label: 'Years Experience' },
-            { value: about.projects, label: 'Projects Completed' },
-            { value: about.clients,  label: 'Happy Clients' },
-            { value: about.standing, label: 'Academic Standing' },
-          ].map((stat, i) => (
-            <div key={i} style={{
-              background: 'var(--dark3)',
-              border: '1px solid var(--dark4)',
-              padding: '1.2rem',
-              borderRadius: '2px',
-            }}>
-              <div style={{
-                fontFamily: 'var(--font-display)',
-                fontSize: '2rem',
-                fontWeight: 800,
-                color: 'var(--cr-light)',
+          {/* Stats */}
+          <motion.div
+            variants={fadeUp}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            custom={5}
+            style={{
+              display: 'grid',
+              gridTemplateColumns: '1fr 1fr',
+              gap: '1rem',
+            }}
+          >
+            {[
+              { value: about.years,    label: 'Years Experience' },
+              { value: about.projects, label: 'Projects Completed' },
+              { value: about.clients,  label: 'Happy Clients' },
+              { value: about.standing, label: 'Academic Standing' },
+            ].map((stat, i) => (
+              <div key={i} style={{
+                background: 'var(--dark3)',
+                border: '1px solid var(--dark4)',
+                padding: 'clamp(0.8rem, 2vw, 1.2rem)',
+                borderRadius: '2px',
               }}>
-                {stat.value}
+                <div style={{
+                  fontFamily: 'var(--font-display)',
+                  fontSize: 'clamp(1.5rem, 4vw, 2rem)',
+                  fontWeight: 800,
+                  color: 'var(--cr-light)',
+                }}>
+                  {stat.value}
+                </div>
+                <div style={{
+                  fontFamily: 'var(--font-mono)',
+                  fontSize: 'clamp(0.6rem, 1.5vw, 0.7rem)',
+                  color: '#666',
+                  letterSpacing: '0.1em',
+                  marginTop: '0.2rem',
+                }}>
+                  {stat.label}
+                </div>
               </div>
-              <div style={{
-                fontFamily: 'var(--font-mono)',
-                fontSize: '0.7rem',
-                color: '#666',
-                letterSpacing: '0.1em',
-                marginTop: '0.2rem',
-              }}>
-                {stat.label}
-              </div>
-            </div>
-          ))}
+            ))}
+          </motion.div>
         </div>
       </div>
     </section>

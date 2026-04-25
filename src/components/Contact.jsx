@@ -1,17 +1,19 @@
 import React, { useState } from 'react';
+import { motion } from 'framer-motion';
 import emailjs from 'emailjs-com';
 import { sanitise } from '../utils/sanitise';
 
 function Contact({ contact }) {
-  const [form, setForm] = useState({ name: '', email: '', message: '' });
+  const [form, setForm] = useState({ name: '', email: '', message: '', honeypot: '' });
   const [status, setStatus] = useState(null);
 
   const handleChange = e => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-const handleSubmit = e => {
+  const handleSubmit = e => {
     e.preventDefault();
+    if (form.honeypot) return;
     setStatus('sending');
 
     const clean = {
@@ -28,12 +30,18 @@ const handleSubmit = e => {
     )
       .then(() => {
         setStatus('success');
-        setForm({ name: '', email: '', message: '' });
+        setForm({ name: '', email: '', message: '', honeypot: '' });
       })
       .catch(() => {
         setStatus('error');
       });
   };
+
+  const contactItems = [
+    { label: 'Email',    value: contact.email,    href: 'mailto:' + contact.email },
+    { label: 'Phone',    value: contact.phone,    href: 'tel:' + contact.phone },
+    { label: 'Location', value: contact.location, href: null },
+  ];
 
   const socials = [
     { label: 'Facebook',  url: contact.facebook },
@@ -42,189 +50,251 @@ const handleSubmit = e => {
     { label: 'GitHub',    url: contact.github },
   ];
 
-  const contactItems = [
-    { label: 'Email',    value: contact.email,    href: 'mailto:' + contact.email },
-    { label: 'Phone',    value: contact.phone,    href: 'tel:' + contact.phone },
-    { label: 'Location', value: contact.location, href: null },
-  ];
-
   return (
     <section id="contact" style={{
-      padding: '7rem 3rem',
+      padding: 'clamp(4rem, 8vw, 7rem) clamp(1.5rem, 5vw, 3rem)',
       background: 'var(--dark)',
-      display: 'grid',
-      gridTemplateColumns: '1fr 1fr',
-      gap: '5rem',
-      alignItems: 'start',
     }}>
-
-      {/* Left — contact info */}
-      <div>
-        <div style={{
-          fontFamily: 'var(--font-mono)',
-          fontSize: '0.75rem',
-          color: 'var(--cr-light)',
-          letterSpacing: '0.25em',
-          textTransform: 'uppercase',
-          marginBottom: '1rem',
-        }}>
-          Say Hello
-        </div>
-
-        <h2 style={{
-          fontFamily: 'var(--font-display)',
-          fontSize: 'clamp(2rem, 5vw, 3.5rem)',
-          fontWeight: 800,
-          lineHeight: 1.05,
-          marginBottom: '1rem',
-        }}>
-          Get In <span style={{ color: 'var(--cr-light)' }}>Touch</span>
-        </h2>
-
-        <div style={{
-          width: '3rem',
-          height: '2px',
-          background: 'var(--cr)',
-          marginBottom: '2.5rem',
-        }} />
-
-        {contactItems.map((item, i) => (
-          <div key={i} style={{ marginBottom: '1.5rem' }}>
-            <div style={{
-              fontFamily: 'var(--font-mono)',
-              fontSize: '0.7rem',
-              color: '#555',
-              letterSpacing: '0.15em',
-              textTransform: 'uppercase',
-              marginBottom: '0.3rem',
-            }}>
-              {item.label}
-            </div>
-            {item.href ? (
-              <a href={item.href} style={{
-                fontSize: '1rem',
-                color: 'var(--cr-light)',
-                textDecoration: 'underline',
-                textDecorationColor: 'var(--cr-dim)',
-              }}>
-                {item.value}
-              </a>
-            ) : (
-              <p style={{ fontSize: '1rem', color: 'var(--light)' }}>
-                {item.value}
-              </p>
-            )}
-          </div>
-        ))}
-
-        <div style={{
-          display: 'flex',
-          flexWrap: 'wrap',
-          gap: '0.8rem',
-          marginTop: '2rem',
-        }}>
-          {socials.map((s, i) => (
-            <SocialChip key={i} label={s.label} url={s.url} />
-          ))}
-        </div>
-      </div>
-
-      {/* Right — form */}
       <div style={{
-        background: 'var(--dark3)',
-        border: '1px solid var(--dark4)',
-        borderRadius: '2px',
-        padding: '2rem',
+        maxWidth: '1200px',
+        margin: '0 auto',
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 360px), 1fr))',
+        gap: 'clamp(2rem, 5vw, 5rem)',
+        alignItems: 'start',
       }}>
-        <form onSubmit={handleSubmit}>
 
-          <FormField
-            label="Name"
-            type="text"
-            name="name"
-            placeholder="Your name"
-            value={form.name}
-            onChange={handleChange}
-          />
-
-          <FormField
-            label="Email"
-            type="email"
-            name="email"
-            placeholder="your@email.com"
-            value={form.email}
-            onChange={handleChange}
-          />
-
-          <div style={{ marginBottom: '1.2rem' }}>
-            <label style={{
-              display: 'block',
+        {/* Left — Info */}
+        <div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+            style={{
               fontFamily: 'var(--font-mono)',
-              fontSize: '0.7rem',
-              color: '#666',
-              letterSpacing: '0.12em',
-              textTransform: 'uppercase',
-              marginBottom: '0.4rem',
-            }}>
-              Message
-            </label>
-            <textarea
-              name="message"
-              placeholder="Tell me about your project..."
-              value={form.message}
-              onChange={handleChange}
-              required
-              rows={5}
-              style={{
-                width: '100%',
-                background: 'var(--dark)',
-                border: '1px solid var(--dark4)',
-                color: 'var(--light)',
-                padding: '0.8rem 1rem',
-                fontFamily: 'var(--font-display)',
-                fontSize: '0.9rem',
-                borderRadius: '1px',
-                outline: 'none',
-                resize: 'vertical',
-                minHeight: '120px',
-              }}
-            />
-          </div>
-
-          <SubmitButton status={status} />
-
-          {status === 'success' && (
-            <p style={{
-              fontFamily: 'var(--font-mono)',
-              fontSize: '0.8rem',
-              color: '#4caf50',
-              marginTop: '1rem',
-              textAlign: 'center',
-              letterSpacing: '0.08em',
-            }}>
-              ✓ Message sent! I'll be in touch soon.
-            </p>
-          )}
-
-          {status === 'error' && (
-            <p style={{
-              fontFamily: 'var(--font-mono)',
-              fontSize: '0.8rem',
+              fontSize: '0.75rem',
               color: 'var(--cr-light)',
-              marginTop: '1rem',
-              textAlign: 'center',
-              letterSpacing: '0.08em',
-            }}>
-              ✕ Something went wrong. Please try again.
-            </p>
-          )}
-        </form>
+              letterSpacing: '0.25em',
+              textTransform: 'uppercase',
+              marginBottom: '1rem',
+            }}
+          >
+            Say Hello
+          </motion.div>
+
+          <motion.h2
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            style={{
+              fontFamily: 'var(--font-display)',
+              fontSize: 'clamp(2rem, 5vw, 3.5rem)',
+              fontWeight: 800,
+              lineHeight: 1.05,
+              marginBottom: '1rem',
+            }}
+          >
+            Get In{' '}
+            <span style={{ color: 'var(--cr-light)' }}>Touch</span>
+          </motion.h2>
+
+          <motion.div
+            initial={{ opacity: 0, scaleX: 0 }}
+            whileInView={{ opacity: 1, scaleX: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.4, delay: 0.2 }}
+            style={{
+              width: '3rem',
+              height: '2px',
+              background: 'var(--cr)',
+              marginBottom: '2.5rem',
+              transformOrigin: 'left',
+            }}
+          />
+
+          {contactItems.map((item, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.4, delay: 0.2 + i * 0.1 }}
+              style={{ marginBottom: '1.5rem' }}
+            >
+              <div style={{
+                fontFamily: 'var(--font-mono)',
+                fontSize: '0.7rem',
+                color: '#555',
+                letterSpacing: '0.15em',
+                textTransform: 'uppercase',
+                marginBottom: '0.3rem',
+              }}>
+                {item.label}
+              </div>
+              {item.href ? (
+                <a href={item.href} style={{
+                  fontSize: 'clamp(0.85rem, 2vw, 1rem)',
+                  color: 'var(--cr-light)',
+                  textDecoration: 'underline',
+                  textDecorationColor: 'var(--cr-dim)',
+                  wordBreak: 'break-all',
+                }}>
+                  {item.value}
+                </a>
+              ) : (
+                <p style={{
+                  fontSize: 'clamp(0.85rem, 2vw, 1rem)',
+                  color: 'var(--light)',
+                }}>
+                  {item.value}
+                </p>
+              )}
+            </motion.div>
+          ))}
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.5 }}
+            style={{
+              display: 'flex',
+              flexWrap: 'wrap',
+              gap: '0.8rem',
+              marginTop: '2rem',
+            }}
+          >
+            {socials.map((s, i) => (
+              <SocialChip key={i} label={s.label} url={s.url} />
+            ))}
+          </motion.div>
+        </div>
+
+        {/* Right — Form */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.3 }}
+          style={{
+            background: 'var(--dark3)',
+            border: '1px solid var(--dark4)',
+            borderRadius: '2px',
+            padding: 'clamp(1.2rem, 4vw, 2rem)',
+          }}
+        >
+          <form onSubmit={handleSubmit}>
+
+            {/* Honeypot — hidden from real users */}
+            <div style={{ display: 'none' }}>
+              <input
+                type="text"
+                name="honeypot"
+                value={form.honeypot}
+                onChange={handleChange}
+                tabIndex={-1}
+                autoComplete="off"
+              />
+            </div>
+
+            <ContactField
+              label="Name"
+              type="text"
+              name="name"
+              placeholder="Your name"
+              value={form.name}
+              onChange={handleChange}
+            />
+
+            <ContactField
+              label="Email"
+              type="email"
+              name="email"
+              placeholder="your@email.com"
+              value={form.email}
+              onChange={handleChange}
+            />
+
+            <div style={{ marginBottom: '1.2rem' }}>
+              <label style={{
+                display: 'block',
+                fontFamily: 'var(--font-mono)',
+                fontSize: '0.7rem',
+                color: '#666',
+                letterSpacing: '0.12em',
+                textTransform: 'uppercase',
+                marginBottom: '0.4rem',
+              }}>
+                Message
+              </label>
+              <textarea
+                name="message"
+                placeholder="Tell me about your project..."
+                value={form.message}
+                onChange={handleChange}
+                required
+                rows={5}
+                style={{
+                  width: '100%',
+                  background: 'var(--dark)',
+                  border: '1px solid var(--dark4)',
+                  color: 'var(--light)',
+                  padding: '0.8rem 1rem',
+                  fontFamily: 'var(--font-display)',
+                  fontSize: 'clamp(0.85rem, 2vw, 0.9rem)',
+                  borderRadius: '1px',
+                  outline: 'none',
+                  resize: 'vertical',
+                  minHeight: '120px',
+                }}
+              />
+            </div>
+
+            <SubmitButton status={status} />
+
+            {status === 'success' && (
+              <motion.p
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                style={{
+                  fontFamily: 'var(--font-mono)',
+                  fontSize: '0.8rem',
+                  color: '#4caf50',
+                  marginTop: '1rem',
+                  textAlign: 'center',
+                  letterSpacing: '0.08em',
+                }}
+              >
+                ✓ Message sent! I'll be in touch soon.
+              </motion.p>
+            )}
+
+            {status === 'error' && (
+              <motion.p
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                style={{
+                  fontFamily: 'var(--font-mono)',
+                  fontSize: '0.8rem',
+                  color: 'var(--cr-light)',
+                  marginTop: '1rem',
+                  textAlign: 'center',
+                  letterSpacing: '0.08em',
+                }}
+              >
+                ✕ Something went wrong. Please try again.
+              </motion.p>
+            )}
+          </form>
+        </motion.div>
       </div>
     </section>
   );
 }
 
-function FormField({ label, type, name, placeholder, value, onChange }) {
+function ContactField({ label, type, name, placeholder, value, onChange }) {
   return (
     <div style={{ marginBottom: '1.2rem' }}>
       <label style={{
@@ -252,7 +322,7 @@ function FormField({ label, type, name, placeholder, value, onChange }) {
           color: 'var(--light)',
           padding: '0.8rem 1rem',
           fontFamily: 'var(--font-display)',
-          fontSize: '0.9rem',
+          fontSize: 'clamp(0.85rem, 2vw, 0.9rem)',
           borderRadius: '1px',
           outline: 'none',
         }}
@@ -284,7 +354,7 @@ function SubmitButton({ status }) {
         color: '#fff',
         border: 'none',
         fontFamily: 'var(--font-display)',
-        fontSize: '0.85rem',
+        fontSize: 'clamp(0.8rem, 2vw, 0.85rem)',
         fontWeight: 700,
         letterSpacing: '0.15em',
         textTransform: 'uppercase',
@@ -310,7 +380,7 @@ function SocialChip({ label, url }) {
       onMouseLeave={() => setHovered(false)}
       style={{
         fontFamily: 'var(--font-mono)',
-        fontSize: '0.72rem',
+        fontSize: 'clamp(0.65rem, 1.5vw, 0.72rem)',
         border: '1px solid ' + (hovered ? 'var(--cr-light)' : '#333'),
         padding: '0.4rem 0.8rem',
         borderRadius: '1px',

@@ -1,83 +1,124 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 function Projects({ projects }) {
+  const [selected, setSelected] = useState(null);
+
   return (
     <section id="projects" style={{
-      padding: '7rem 3rem',
+      padding: 'clamp(4rem, 8vw, 7rem) clamp(1.5rem, 5vw, 3rem)',
       background: 'var(--dark2)',
     }}>
+      <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
 
-      {/* Section tag */}
-      <div style={{
-        fontFamily: 'var(--font-mono)',
-        fontSize: '0.75rem',
-        color: 'var(--cr-light)',
-        letterSpacing: '0.25em',
-        textTransform: 'uppercase',
-        marginBottom: '1rem',
-      }}>
-        My Work
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          style={{
+            fontFamily: 'var(--font-mono)',
+            fontSize: '0.75rem',
+            color: 'var(--cr-light)',
+            letterSpacing: '0.25em',
+            textTransform: 'uppercase',
+            marginBottom: '1rem',
+          }}
+        >
+          My Work
+        </motion.div>
+
+        <motion.h2
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.1 }}
+          style={{
+            fontFamily: 'var(--font-display)',
+            fontSize: 'clamp(2rem, 5vw, 3.5rem)',
+            fontWeight: 800,
+            lineHeight: 1.05,
+            marginBottom: '1rem',
+          }}
+        >
+          Featured <span style={{ color: 'var(--cr-light)' }}>Projects</span>
+        </motion.h2>
+
+        <motion.div
+          initial={{ opacity: 0, scaleX: 0 }}
+          whileInView={{ opacity: 1, scaleX: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.4, delay: 0.2 }}
+          style={{
+            width: '3rem',
+            height: '2px',
+            background: 'var(--cr)',
+            marginBottom: '3rem',
+            transformOrigin: 'left',
+          }}
+        />
+
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 460px), 1fr))',
+          gap: 'clamp(1rem, 3vw, 1.5rem)',
+        }}>
+          {projects.map((project, i) => (
+            <ProjectCard
+              key={i}
+              project={project}
+              index={i}
+              onClick={() => setSelected(project)}
+            />
+          ))}
+        </div>
       </div>
 
-      {/* Title */}
-      <h2 style={{
-        fontFamily: 'var(--font-display)',
-        fontSize: 'clamp(2rem, 5vw, 3.5rem)',
-        fontWeight: 800,
-        lineHeight: 1.05,
-        marginBottom: '1rem',
-      }}>
-        Featured <span style={{ color: 'var(--cr-light)' }}>Projects</span>
-      </h2>
-
-      {/* Divider */}
-      <div style={{
-        width: '3rem',
-        height: '2px',
-        background: 'var(--cr)',
-        marginBottom: '3rem',
-      }} />
-
-      {/* Projects grid */}
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fill, minmax(480px, 1fr))',
-        gap: '1.5rem',
-      }}>
-        {projects.map((project, i) => (
-          <ProjectCard key={i} project={project} index={i} />
-        ))}
-      </div>
+      {/* Modal */}
+      <AnimatePresence>
+        {selected && (
+          <ProjectModal
+            project={selected}
+            onClose={() => setSelected(null)}
+          />
+        )}
+      </AnimatePresence>
     </section>
   );
 }
 
-function ProjectCard({ project, index }) {
-  const [hovered, setHovered] = React.useState(false);
+const accentColors = [
+  'hsl(348,60%,18%)',
+  'hsl(220,60%,18%)',
+  'hsl(160,60%,18%)',
+  'hsl(280,60%,18%)',
+];
 
-  const accentColors = [
-    'hsl(348,60%,18%)',
-    'hsl(220,60%,18%)',
-    'hsl(160,60%,18%)',
-    'hsl(280,60%,18%)',
-  ];
+function ProjectCard({ project, index, onClick }) {
+  const [hovered, setHovered] = useState(false);
 
   return (
-    <div
+    <motion.div
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.5, delay: index * 0.1 }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
+      onClick={onClick}
       style={{
         background: 'var(--dark3)',
-        border: `1px solid ${hovered ? 'var(--cr-dim)' : 'var(--dark4)'}`,
+        border: '1px solid ' + (hovered ? 'var(--cr-dim)' : 'var(--dark4)'),
         borderRadius: '2px',
         overflow: 'hidden',
         transition: 'all 0.25s',
         transform: hovered ? 'translateY(-6px)' : 'translateY(0)',
+        cursor: 'pointer',
       }}
     >
       {/* Thumbnail */}
       <div style={{
-        height: '220px',
+        height: 'clamp(160px, 25vw, 220px)',
         background: accentColors[index % accentColors.length],
         position: 'relative',
         overflow: 'hidden',
@@ -93,29 +134,254 @@ function ProjectCard({ project, index }) {
               transition: 'transform 0.4s ease',
               transform: hovered ? 'scale(1.05)' : 'scale(1)',
             }}
-            onError={e => {
-              e.currentTarget.style.display = 'none';
-            }}
+            onError={e => { e.currentTarget.style.display = 'none'; }}
           />
-            ) : (
-              <div style={{
+        ) : (
+          <div style={{
+            width: '100%',
+            height: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontFamily: 'var(--font-display)',
+            fontSize: 'clamp(3rem, 8vw, 5rem)',
+            fontWeight: 800,
+            color: 'rgba(255,255,255,0.06)',
+          }}>
+            {project.title.charAt(0)}
+          </div>
+        )}
+        <div style={{
+          position: 'absolute',
+          inset: 0,
+          background: 'rgba(0,0,0,0.3)',
+          opacity: hovered ? 1 : 0,
+          transition: 'opacity 0.3s',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}>
+          <span style={{
+            fontFamily: 'var(--font-mono)',
+            fontSize: '0.8rem',
+            color: '#fff',
+            letterSpacing: '0.15em',
+            textTransform: 'uppercase',
+            border: '1px solid rgba(255,255,255,0.4)',
+            padding: '0.5rem 1rem',
+            borderRadius: '1px',
+          }}>
+            View Details
+          </span>
+        </div>
+      </div>
+
+      {/* Info */}
+      <div style={{ padding: 'clamp(1rem, 3vw, 1.5rem)' }}>
+        <h3 style={{
+          fontFamily: 'var(--font-display)',
+          fontSize: 'clamp(1rem, 3vw, 1.2rem)',
+          fontWeight: 700,
+          marginBottom: '0.5rem',
+          color: 'var(--light)',
+        }}>
+          {project.title}
+        </h3>
+
+        <p style={{
+          fontSize: 'clamp(0.8rem, 2vw, 0.9rem)',
+          color: '#777',
+          lineHeight: 1.6,
+          marginBottom: '1rem',
+        }}>
+          {project.desc}
+        </p>
+
+        <div style={{
+          display: 'flex',
+          flexWrap: 'wrap',
+          gap: '0.4rem',
+        }}>
+          {project.tags.map((tag, i) => (
+            <span key={i} style={{
+              fontFamily: 'var(--font-mono)',
+              fontSize: 'clamp(0.6rem, 1.5vw, 0.65rem)',
+              color: 'var(--cr-light)',
+              border: '1px solid var(--cr-dim)',
+              padding: '0.2rem 0.5rem',
+              borderRadius: '1px',
+              letterSpacing: '0.05em',
+            }}>
+              {tag}
+            </span>
+          ))}
+        </div>
+      </div>
+    </motion.div>
+  );
+}
+
+function ProjectModal({ project, onClose }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      onClick={onClose}
+      style={{
+        position: 'fixed',
+        inset: 0,
+        background: 'rgba(0,0,0,0.9)',
+        zIndex: 9999,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '1.5rem',
+      }}
+    >
+      <motion.div
+        initial={{ opacity: 0, y: 40, scale: 0.95 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        exit={{ opacity: 0, y: 40, scale: 0.95 }}
+        transition={{ duration: 0.3 }}
+        onClick={e => e.stopPropagation()}
+        style={{
+          background: 'var(--dark2)',
+          border: '1px solid var(--dark4)',
+          borderRadius: '2px',
+          width: '100%',
+          maxWidth: '640px',
+          maxHeight: '90vh',
+          overflowY: 'auto',
+          position: 'relative',
+        }}
+      >
+        {/* Thumbnail */}
+        <div style={{
+          height: 'clamp(180px, 30vw, 280px)',
+          background: 'hsl(348,60%,18%)',
+          position: 'relative',
+          overflow: 'hidden',
+        }}>
+          {project.image ? (
+            <img
+              src={project.image}
+              alt={project.title}
+              style={{
                 width: '100%',
                 height: '100%',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontFamily: 'var(--font-display)',
-                fontSize: '5rem',
-                fontWeight: 800,
-                color: 'rgba(255,255,255,0.06)',
-                letterSpacing: '-0.05em',
-              }}>
-                {project.title?.charAt(0) ?? '•'}
-              </div>
-            )}
-          </div>
+                objectFit: 'cover',
+              }}
+              onError={e => { e.currentTarget.style.display = 'none'; }}
+            />
+          ) : (
+            <div style={{
+              width: '100%',
+              height: '100%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: '5rem',
+              fontWeight: 800,
+              color: 'rgba(255,255,255,0.06)',
+              fontFamily: 'var(--font-display)',
+            }}>
+              {project.title.charAt(0)}
+            </div>
+          )}
         </div>
-      );
-    }
-    
-    export default Projects;
+
+        {/* Content */}
+        <div style={{ padding: 'clamp(1.5rem, 4vw, 2rem)' }}>
+
+          {/* Close */}
+          <button
+            onClick={onClose}
+            style={{
+              position: 'absolute',
+              top: '1rem',
+              right: '1rem',
+              background: 'rgba(0,0,0,0.5)',
+              border: 'none',
+              color: '#fff',
+              width: '32px',
+              height: '32px',
+              borderRadius: '50%',
+              fontSize: '1rem',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            ✕
+          </button>
+
+          <h2 style={{
+            fontFamily: 'var(--font-display)',
+            fontSize: 'clamp(1.4rem, 4vw, 2rem)',
+            fontWeight: 800,
+            marginBottom: '1rem',
+            color: 'var(--light)',
+          }}>
+            {project.title}
+          </h2>
+
+          <p style={{
+            fontSize: 'clamp(0.85rem, 2vw, 0.95rem)',
+            color: '#aaa',
+            lineHeight: 1.7,
+            marginBottom: '1.5rem',
+          }}>
+            {project.desc}
+          </p>
+
+          <div style={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            gap: '0.4rem',
+            marginBottom: '2rem',
+          }}>
+            {project.tags.map((tag, i) => (
+              <span key={i} style={{
+                fontFamily: 'var(--font-mono)',
+                fontSize: '0.7rem',
+                color: 'var(--cr-light)',
+                border: '1px solid var(--cr-dim)',
+                padding: '0.3rem 0.7rem',
+                borderRadius: '1px',
+              }}>
+                {tag}
+              </span>
+            ))}
+          </div>
+
+          {project.link && project.link !== '#' && (
+            <a
+              href={project.link}
+              target="_blank"
+              rel="noreferrer"
+              style={{
+                display: 'inline-block',
+                padding: '0.8rem 1.8rem',
+                background: 'var(--cr)',
+                color: '#fff',
+                fontFamily: 'var(--font-display)',
+                fontWeight: 700,
+                fontSize: '0.85rem',
+                letterSpacing: '0.12em',
+                textTransform: 'uppercase',
+                borderRadius: '2px',
+                transition: 'background 0.2s',
+              }}
+            >
+              View Live Project →
+            </a>
+          )}
+        </div>
+      </motion.div>
+    </motion.div>
+  );
+}
+
+export default Projects;

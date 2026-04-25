@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { motion } from 'framer-motion';
 import TestimonialSubmit from './TestimonialSubmit';
 
 function Testimonials({ testimonials = [], onSubmit }) {
@@ -6,67 +7,89 @@ function Testimonials({ testimonials = [], onSubmit }) {
 
   return (
     <section id="testimonials" style={{
-      padding: '7rem 3rem',
+      padding: 'clamp(4rem, 8vw, 7rem) clamp(1.5rem, 5vw, 3rem)',
       background: 'var(--dark2)',
     }}>
+      <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
 
-      <div style={{
-        fontFamily: 'var(--font-mono)',
-        fontSize: '0.75rem',
-        color: 'var(--cr-light)',
-        letterSpacing: '0.25em',
-        textTransform: 'uppercase',
-        marginBottom: '1rem',
-      }}>
-        Social Proof
-      </div>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          style={{
+            fontFamily: 'var(--font-mono)',
+            fontSize: '0.75rem',
+            color: 'var(--cr-light)',
+            letterSpacing: '0.25em',
+            textTransform: 'uppercase',
+            marginBottom: '1rem',
+          }}
+        >
+          Social Proof
+        </motion.div>
 
-      <div style={{
-        display: 'flex',
-        alignItems: 'flex-end',
-        justifyContent: 'space-between',
-        flexWrap: 'wrap',
-        gap: '1rem',
-        marginBottom: '1rem',
-      }}>
-        <h2 style={{
-          fontFamily: 'var(--font-display)',
-          fontSize: 'clamp(2rem, 5vw, 3.5rem)',
-          fontWeight: 800,
-          lineHeight: 1.05,
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.1 }}
+          style={{
+            display: 'flex',
+            alignItems: 'flex-end',
+            justifyContent: 'space-between',
+            flexWrap: 'wrap',
+            gap: '1rem',
+            marginBottom: '1rem',
+          }}
+        >
+          <h2 style={{
+            fontFamily: 'var(--font-display)',
+            fontSize: 'clamp(2rem, 5vw, 3.5rem)',
+            fontWeight: 800,
+            lineHeight: 1.05,
+          }}>
+            What Clients{' '}
+            <span style={{ color: 'var(--cr-light)' }}>Say</span>
+          </h2>
+
+          <LeaveButton onClick={() => setShowForm(true)} />
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, scaleX: 0 }}
+          whileInView={{ opacity: 1, scaleX: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.4, delay: 0.2 }}
+          style={{
+            width: '3rem',
+            height: '2px',
+            background: 'var(--cr)',
+            marginBottom: '3rem',
+            transformOrigin: 'left',
+          }}
+        />
+
+        {testimonials.length === 0 && (
+          <p style={{
+            fontFamily: 'var(--font-mono)',
+            fontSize: '0.8rem',
+            color: '#555',
+            marginBottom: '2rem',
+          }}>
+            No testimonials yet — be the first!
+          </p>
+        )}
+
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 400px), 1fr))',
+          gap: 'clamp(1rem, 3vw, 1.5rem)',
         }}>
-          What Clients <span style={{ color: 'var(--cr-light)' }}>Say</span>
-        </h2>
-
-        <LeaveButton onClick={() => setShowForm(true)} />
-      </div>
-
-      <div style={{
-        width: '3rem',
-        height: '2px',
-        background: 'var(--cr)',
-        marginBottom: '3rem',
-      }} />
-
-      {testimonials.length === 0 && (
-        <p style={{
-          fontFamily: 'var(--font-mono)',
-          fontSize: '0.8rem',
-          color: '#555',
-          marginBottom: '2rem',
-        }}>
-          No testimonials yet — be the first!
-        </p>
-      )}
-
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fill, minmax(420px, 1fr))',
-        gap: '1.5rem',
-      }}>
-        {testimonials.map((t, i) => (
-          <TestimonialCard key={i} testimonial={t} />
-        ))}
+          {testimonials.map((t, i) => (
+            <TestimonialCard key={i} testimonial={t} index={i} />
+          ))}
+        </div>
       </div>
 
       {showForm && (
@@ -83,7 +106,7 @@ function Testimonials({ testimonials = [], onSubmit }) {
 }
 
 function LeaveButton({ onClick }) {
-  const [hovered, setHovered] = React.useState(false);
+  const [hovered, setHovered] = useState(false);
   return (
     <button
       onClick={onClick}
@@ -91,8 +114,8 @@ function LeaveButton({ onClick }) {
       onMouseLeave={() => setHovered(false)}
       style={{
         fontFamily: 'var(--font-mono)',
-        fontSize: '0.75rem',
-        padding: '0.6rem 1.2rem',
+        fontSize: 'clamp(0.65rem, 2vw, 0.75rem)',
+        padding: 'clamp(0.4rem, 1.5vw, 0.6rem) clamp(0.8rem, 2vw, 1.2rem)',
         background: 'transparent',
         border: '1px solid ' + (hovered ? 'var(--cr-light)' : 'var(--dark4)'),
         color: hovered ? 'var(--cr-light)' : '#666',
@@ -101,6 +124,7 @@ function LeaveButton({ onClick }) {
         letterSpacing: '0.1em',
         textTransform: 'uppercase',
         transition: 'all 0.2s',
+        whiteSpace: 'nowrap',
       }}
     >
       + Leave a Testimonial
@@ -108,18 +132,22 @@ function LeaveButton({ onClick }) {
   );
 }
 
-function TestimonialCard({ testimonial }) {
-  const [hovered, setHovered] = React.useState(false);
+function TestimonialCard({ testimonial, index }) {
+  const [hovered, setHovered] = useState(false);
 
   return (
-    <div
+    <motion.div
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.5, delay: index * 0.1 }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       style={{
         background: 'var(--dark3)',
         border: '1px solid ' + (hovered ? 'var(--cr-dim)' : 'var(--dark4)'),
         borderRadius: '2px',
-        padding: '2rem',
+        padding: 'clamp(1.2rem, 3vw, 2rem)',
         position: 'relative',
         transition: 'all 0.2s',
         transform: hovered ? 'translateY(-4px)' : 'translateY(0)',
@@ -130,7 +158,7 @@ function TestimonialCard({ testimonial }) {
         top: '0.5rem',
         right: '1.5rem',
         fontFamily: 'Georgia, serif',
-        fontSize: '5rem',
+        fontSize: 'clamp(3rem, 8vw, 5rem)',
         lineHeight: 1,
         color: hovered ? 'var(--cr-dim)' : 'rgba(255,255,255,0.04)',
         transition: 'color 0.3s',
@@ -141,7 +169,7 @@ function TestimonialCard({ testimonial }) {
       </div>
 
       <p style={{
-        fontSize: '0.95rem',
+        fontSize: 'clamp(0.85rem, 2vw, 0.95rem)',
         color: '#aaa',
         lineHeight: 1.7,
         fontStyle: 'italic',
@@ -180,14 +208,14 @@ function TestimonialCard({ testimonial }) {
           <div style={{
             fontFamily: 'var(--font-display)',
             fontWeight: 700,
-            fontSize: '0.9rem',
+            fontSize: 'clamp(0.8rem, 2vw, 0.9rem)',
             color: 'var(--light)',
           }}>
             {testimonial.author}
           </div>
           <div style={{
             fontFamily: 'var(--font-mono)',
-            fontSize: '0.7rem',
+            fontSize: 'clamp(0.62rem, 1.5vw, 0.7rem)',
             color: '#666',
             marginTop: '0.2rem',
             letterSpacing: '0.05em',
@@ -196,7 +224,7 @@ function TestimonialCard({ testimonial }) {
           </div>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }
 

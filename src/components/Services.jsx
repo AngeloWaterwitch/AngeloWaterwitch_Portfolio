@@ -1,52 +1,75 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 
 function Services({ services }) {
   return (
     <section id="services" style={{
-      padding: '7rem 3rem',
+      padding: 'clamp(4rem, 8vw, 7rem) clamp(1.5rem, 5vw, 3rem)',
       background: 'var(--dark)',
     }}>
+      <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
 
-      {/* Section tag */}
-      <div style={{
-        fontFamily: 'var(--font-mono)',
-        fontSize: '0.75rem',
-        color: 'var(--cr-light)',
-        letterSpacing: '0.25em',
-        textTransform: 'uppercase',
-        marginBottom: '1rem',
-      }}>
-        What I Offer
-      </div>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          style={{
+            fontFamily: 'var(--font-mono)',
+            fontSize: '0.75rem',
+            color: 'var(--cr-light)',
+            letterSpacing: '0.25em',
+            textTransform: 'uppercase',
+            marginBottom: '1rem',
+          }}
+        >
+          What I Offer
+        </motion.div>
 
-      {/* Title */}
-      <h2 style={{
-        fontFamily: 'var(--font-display)',
-        fontSize: 'clamp(2rem, 5vw, 3.5rem)',
-        fontWeight: 800,
-        lineHeight: 1.05,
-        marginBottom: '1rem',
-      }}>
-        My <span style={{ color: 'var(--cr-light)' }}>Services</span>
-      </h2>
+        <motion.h2
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.1 }}
+          style={{
+            fontFamily: 'var(--font-display)',
+            fontSize: 'clamp(2rem, 5vw, 3.5rem)',
+            fontWeight: 800,
+            lineHeight: 1.05,
+            marginBottom: '1rem',
+          }}
+        >
+          My <span style={{ color: 'var(--cr-light)' }}>Services</span>
+        </motion.h2>
 
-      {/* Divider */}
-      <div style={{
-        width: '3rem',
-        height: '2px',
-        background: 'var(--cr)',
-        marginBottom: '3rem',
-      }} />
+        <motion.div
+          initial={{ opacity: 0, scaleX: 0 }}
+          whileInView={{ opacity: 1, scaleX: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.4, delay: 0.2 }}
+          style={{
+            width: '3rem',
+            height: '2px',
+            background: 'var(--cr)',
+            marginBottom: '3rem',
+            transformOrigin: 'left',
+          }}
+        />
 
-      {/* Services list */}
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(3, 1fr)',
-        border: '1px solid var(--dark4)',
-      }}>
-        {services.map((service, i) => (
-          <ServiceItem key={i} service={service} index={i} total={services.length} />
-        ))}
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 280px), 1fr))',
+          border: '1px solid var(--dark4)',
+        }}>
+          {services.map((service, i) => (
+            <ServiceItem
+              key={i}
+              service={service}
+              index={i}
+              total={services.length}
+            />
+          ))}
+        </div>
       </div>
     </section>
   );
@@ -55,23 +78,25 @@ function Services({ services }) {
 function ServiceItem({ service, index, total }) {
   const [hovered, setHovered] = React.useState(false);
 
-  const isLast = index === total - 1;
-
   return (
-    <div
+    <motion.div
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.5, delay: index * 0.15 }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       style={{
-        padding: '2.5rem',
+        padding: 'clamp(1.5rem, 4vw, 2.5rem)',
         background: hovered ? 'var(--dark3)' : 'var(--dark2)',
-        borderRight: isLast ? 'none' : '1px solid var(--dark4)',
-        borderLeft: 'none',
+        borderRight: index === total - 1 ? 'none' : '1px solid var(--dark4)',
+        borderBottom: '1px solid var(--dark4)',
         transition: 'background 0.2s',
         position: 'relative',
         overflow: 'hidden',
       }}
     >
-      {/* Crimson top accent line on hover */}
+      {/* Crimson top accent */}
       <div style={{
         position: 'absolute',
         top: 0,
@@ -84,7 +109,6 @@ function ServiceItem({ service, index, total }) {
         transition: 'transform 0.3s ease',
       }} />
 
-      {/* Number */}
       <div style={{
         fontFamily: 'var(--font-mono)',
         fontSize: '0.75rem',
@@ -95,10 +119,9 @@ function ServiceItem({ service, index, total }) {
         {service.num}
       </div>
 
-      {/* Title */}
       <h3 style={{
         fontFamily: 'var(--font-display)',
-        fontSize: '1.4rem',
+        fontSize: 'clamp(1.1rem, 3vw, 1.4rem)',
         fontWeight: 700,
         color: hovered ? 'var(--cr-light)' : 'var(--light)',
         marginBottom: '1rem',
@@ -107,15 +130,14 @@ function ServiceItem({ service, index, total }) {
         {service.title}
       </h3>
 
-      {/* Description */}
       <p style={{
-        fontSize: '0.9rem',
+        fontSize: 'clamp(0.85rem, 2vw, 0.9rem)',
         color: '#777',
         lineHeight: 1.7,
       }}>
         {service.desc}
       </p>
-    </div>
+    </motion.div>
   );
 }
 
