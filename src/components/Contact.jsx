@@ -41,11 +41,11 @@ function Contact({ contact, onMessage }) {
 
     onMessage(clean);
 
-    emailjs.send(
-      'service_4ygvl7n',
-      'template_14pi014',
+emailjs.send(
+      process.env.REACT_APP_EMAILJS_SERVICE_ID,
+      process.env.REACT_APP_EMAILJS_TEMPLATE_ID,
       clean,
-      '66bbAvGf6kl0cQLvw'
+      process.env.REACT_APP_EMAILJS_PUBLIC_KEY
     )
       .then(() => {
         setStatus('success');
