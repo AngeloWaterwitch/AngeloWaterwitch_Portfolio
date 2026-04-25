@@ -50,7 +50,7 @@ function applyBranding(branding) {
 }
 
 function App() {
-  const {
+const {
     data,
     updateData,
     resetData,
@@ -62,6 +62,7 @@ function App() {
     saveMessage,
     markMessageRead,
     deleteMessage,
+    activity,
   } = useSiteData();
 
   const [adminOpen, setAdminOpen] = useState(false);
@@ -89,6 +90,7 @@ function App() {
         messages={messages}
         onMarkRead={markMessageRead}
         onDeleteMessage={deleteMessage}
+        activity={activity}
       />
     );
   }

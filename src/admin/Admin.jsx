@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import AdminLogin from './AdminLogin';
 import DragList from './DragList';
 
-function Admin({ onClose, data, onSave, pending, onApprove, onRemovePending, messages, onMarkRead, onDeleteMessage, onReset }) {
+function Admin({ onClose, data, onSave, pending, onApprove, onRemovePending, messages, onMarkRead, onDeleteMessage, onReset, activity }) {
   const [authed, setAuthed] = useState(false);
   const [local, setLocal] = useState(() => JSON.parse(JSON.stringify(data)));
   const [saved, setSaved] = useState(false);
@@ -133,6 +133,87 @@ function Admin({ onClose, data, onSave, pending, onApprove, onRemovePending, mes
           </a>
           {' '}for better search visibility.
         </div>
+
+{/* Activity Log */}
+        <AdminLabel>Activity Log</AdminLabel>
+        {!activity || activity.length === 0 ? (
+          <p style={{
+            fontFamily: 'var(--font-mono)',
+            fontSize: '0.75rem',
+            color: '#555',
+            marginBottom: '1.5rem',
+          }}>
+            No activity recorded yet.
+          </p>
+        ) : (
+          <div style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '0.5rem',
+            marginBottom: '1.5rem',
+            maxHeight: '300px',
+            overflowY: 'auto',
+            paddingRight: '0.5rem',
+          }}>
+            {activity.map(entry => (
+              <div key={entry.id} style={{
+                background: 'var(--dark3)',
+                border: '1px solid var(--dark4)',
+                borderRadius: '2px',
+                padding: '0.8rem 1rem',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '1rem',
+                flexWrap: 'wrap',
+              }}>
+                <div style={{
+                  width: '8px',
+                  height: '8px',
+                  borderRadius: '50%',
+                  flexShrink: 0,
+                  background: entry.action === 'restore'
+                    ? '#f59e0b'
+                    : entry.action === 'approve'
+                    ? '#4caf50'
+                    : 'var(--cr)',
+                }} />
+                <div style={{ flex: 1 }}>
+                  <div style={{
+                    fontFamily: 'var(--font-display)',
+                    fontSize: '0.85rem',
+                    color: 'var(--light)',
+                    fontWeight: 600,
+                  }}>
+                    {entry.detail}
+                  </div>
+                  <div style={{
+                    fontFamily: 'var(--font-mono)',
+                    fontSize: '0.65rem',
+                    color: '#555',
+                    marginTop: '0.2rem',
+                  }}>
+                    {new Date(entry.timestamp).toLocaleDateString()}{' '}
+                    {new Date(entry.timestamp).toLocaleTimeString()}
+                  </div>
+                </div>
+                <div style={{
+                  fontFamily: 'var(--font-mono)',
+                  fontSize: '0.65rem',
+                  color: entry.action === 'restore'
+                    ? '#f59e0b'
+                    : entry.action === 'approve'
+                    ? '#4caf50'
+                    : 'var(--cr-light)',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.1em',
+                  flexShrink: 0,
+                }}>
+                  {entry.action}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
 
         {/* Resume */}
         <AdminLabel>Resume / CV</AdminLabel>

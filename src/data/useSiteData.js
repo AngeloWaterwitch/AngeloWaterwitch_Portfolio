@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { defaultData } from './data';
 
+
+const ACTIVITY_KEY = 'aw_activity_log';
 const STORAGE_KEY = 'aw_portfolio_v2';
 const PENDING_KEY = 'aw_pending_testimonials';
 const MESSAGES_KEY = 'aw_messages';
@@ -32,13 +34,40 @@ function loadMessages() {
   }
 }
 
+function loadActivityLog() {
+  try {
+    const saved = localStorage.getItem(ACTIVITY_KEY);
+    return saved ? JSON.parse(saved) : [];
+  } catch {
+    return [];
+  }
+}
+
 export function useSiteData() {
   const [data, setData] = useState(loadData);
   const [pending, setPending] = useState(loadPending);
   const [messages, setMessages] = useState(loadMessages);
+  const [activityLog, setActivityLog] = useState(loadActivityLog);
 
-  const updateData = (newData) => {
+  const logActivity = (action, detail) => {
+    const entry = {
+      id: 'a' + Date.now(),
+      action,
+      detail,
+      timestamp: new Date().toISOString(),
+    };
+    const updated = [entry, ...activity].slice(0, 50);
+    setActivity(updated);
+    try {
+      localStorage.setItem(ACTIVITY_KEY, JSON.stringify(updated));
+    } catch {
+      console.error('Could not save activity log');
+    }
+  };
+
+const updateData = (newData) => {
     setData(newData);
+    logActivity('save', 'Site content saved and published');
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(newData));
     } catch {
@@ -61,7 +90,7 @@ export function useSiteData() {
     }
   };
 
-  const approvePending = (id) => {
+const approvePending = (id) => {
     const item = pending.find(p => p.id === id);
     if (!item) return;
     const approved = {
@@ -73,6 +102,7 @@ export function useSiteData() {
       ...data,
       testimonials: [...data.testimonials, approved],
     };
+    logActivity('approve', 'Testimonial approved from ' + item.author);
     updateData(newData);
     removePending(id);
   };
@@ -124,11 +154,12 @@ export function useSiteData() {
     }
   };
 
-  const resetData = () => {
+const resetData = () => {
+    logActivity('restore', 'Site content restored to defaults');
     updateData(defaultData);
   };
 
-  return {
+return {
     data,
     updateData,
     resetData,
@@ -140,5 +171,6 @@ export function useSiteData() {
     saveMessage,
     markMessageRead,
     deleteMessage,
+    activity,
   };
 }
