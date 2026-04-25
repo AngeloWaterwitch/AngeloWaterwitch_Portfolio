@@ -134,6 +134,74 @@ function Admin({ onClose, data, onSave, pending, onApprove, onRemovePending, mes
           {' '}for better search visibility.
         </div>
 
+        {/* Resume */}
+        <AdminLabel>Resume / CV</AdminLabel>
+        <div style={{
+          background: 'var(--dark3)',
+          border: '1px solid var(--dark4)',
+          borderRadius: '2px',
+          padding: '1.5rem',
+          marginBottom: '1rem',
+        }}>
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            marginBottom: '1.2rem',
+            flexWrap: 'wrap',
+            gap: '1rem',
+          }}>
+            <div>
+              <div style={{
+                fontFamily: 'var(--font-display)',
+                fontWeight: 700,
+                fontSize: '0.95rem',
+                color: 'var(--light)',
+                marginBottom: '0.3rem',
+              }}>
+                Resume Download Button
+              </div>
+              <div style={{
+                fontFamily: 'var(--font-mono)',
+                fontSize: '0.7rem',
+                color: '#666',
+              }}>
+                {local.hero?.resumeEnabled
+                  ? 'Visible on the hero section'
+                  : 'Hidden from visitors'}
+              </div>
+            </div>
+            <Toggle
+              checked={local.hero?.resumeEnabled !== false}
+              onChange={val => set('hero.resumeEnabled', val)}
+            />
+          </div>
+
+          <AdminGrid>
+            <AdminField
+              label="Button Label"
+              value={local.hero?.resumeLabel || 'Download CV'}
+              onChange={v => set('hero.resumeLabel', v)}
+            />
+            <AdminField
+              label="Resume File URL"
+              value={local.hero?.resumeUrl || ''}
+              onChange={v => set('hero.resumeUrl', v)}
+            />
+          </AdminGrid>
+
+          <div style={{
+            fontFamily: 'var(--font-mono)',
+            fontSize: '0.68rem',
+            color: '#555',
+            lineHeight: 1.6,
+            marginTop: '0.5rem',
+          }}>
+            File is served from /public/resume/ folder.
+            Current path: {local.hero?.resumeUrl || 'not set'}
+          </div>
+        </div>
+
         {/* Branding */}
         <AdminLabel>Branding</AdminLabel>
         <AdminGrid>

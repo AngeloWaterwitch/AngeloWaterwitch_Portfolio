@@ -6,6 +6,12 @@ branding: {
     logoUrl: '',
   },
 
+resume: {
+    enabled: true,
+    url: '/resume/AngeloWaterwitch_CV (4).pdf',
+    label: 'Download CV',
+  },
+
 seo: {
     title: 'Angelo Waterwitch — Software & Design Engineer',
     description: 'Portfolio of Angelo Waterwitch, a software and design engineering student based in Cape Town, South Africa. Specialising in React, UI/UX, and creative digital experiences.',
@@ -18,7 +24,9 @@ seo: {
     name: "Angelo Waterwitch",
     role: "Software & Design Engineer",
     sub: "I turn complex problems into elegant, functional solutions — blending creativity with technical precision.",
-    resumeUrl: "/resume/AngeloWaterwitch_CV (4).pdf",
+    resumeEnabled: true,
+    resumeUrl: '/resume/AngeloWaterwitch_CV (4).pdf',
+    resumeLabel: 'Download CV',
   },
 
   about: {

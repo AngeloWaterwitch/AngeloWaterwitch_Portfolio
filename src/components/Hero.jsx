@@ -118,12 +118,14 @@ function Hero({ hero }) {
             flexWrap: 'wrap',
           }}
         >
-          <HeroButton
-            href={hero.resumeUrl}
-            download
-            primary
-            label="Download CV"
-          />
+          {hero.resumeEnabled !== false && (
+            <HeroButton
+              href={hero.resumeUrl}
+              download
+              primary
+              label={hero.resumeLabel || 'Download CV'}
+            />
+          )}
           <HeroButton
             href="#contact"
             label="Get In Touch"
