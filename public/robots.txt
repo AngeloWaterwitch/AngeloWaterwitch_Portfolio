@@ -1,6 +1,6 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://angelowaterwitch.vercel.app/sitemap.xml
+Sitemap: https://angelo-waterwitch-portfolio-67yp.vercel.app/sitemap.xml
 
 Disallow: /admin
