@@ -1,8 +1,9 @@
+import RestoreDefaults from './RestoreDefaults';
 import React, { useState } from 'react';
 import AdminLogin from './AdminLogin';
 import DragList from './DragList';
 
-function Admin({ onClose, data, onSave, pending, onApprove, onRemovePending }) {
+function Admin({ onClose, data, onSave, pending, onApprove, onRemovePending, messages, onMarkRead, onDeleteMessage, onReset }) {
   const [authed, setAuthed] = useState(false);
   const [local, setLocal] = useState(() => JSON.parse(JSON.stringify(data)));
   const [saved, setSaved] = useState(false);
@@ -75,6 +76,9 @@ function Admin({ onClose, data, onSave, pending, onApprove, onRemovePending }) {
       <div style={{ padding: '2rem', maxWidth: '900px', margin: '0 auto' }}>
 
         {/* SEO */}
+        {/* Restore Defaults */}
+        <AdminLabel>Site Settings</AdminLabel>
+        <RestoreDefaults onRestore={onReset} />
         <AdminLabel>SEO & Meta Tags</AdminLabel>
         <AdminGrid>
           <AdminField
@@ -321,6 +325,152 @@ function Admin({ onClose, data, onSave, pending, onApprove, onRemovePending }) {
         </div>
 
         {/* Testimonials */}
+
+{/* Messages Inbox */}
+        <AdminLabel>
+          Messages Inbox{' '}
+          {messages && messages.filter(m => !m.read).length > 0 && (
+            <span style={{
+              background: 'var(--cr)',
+              color: '#fff',
+              fontFamily: 'var(--font-mono)',
+              fontSize: '0.65rem',
+              padding: '0.15rem 0.5rem',
+              borderRadius: '10px',
+              marginLeft: '0.5rem',
+            }}>
+              {messages.filter(m => !m.read).length} new
+            </span>
+          )}
+        </AdminLabel>
+
+        {!messages || messages.length === 0 ? (
+          <p style={{
+            fontFamily: 'var(--font-mono)',
+            fontSize: '0.75rem',
+            color: '#555',
+            marginBottom: '1rem',
+          }}>
+            No messages yet.
+          </p>
+        ) : (
+          <div style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '0.8rem',
+            marginBottom: '1.5rem',
+          }}>
+            {[...messages].reverse().map(msg => (
+              <div key={msg.id} style={{
+                background: msg.read ? 'var(--dark3)' : 'var(--dark2)',
+                border: '1px solid ' + (msg.read ? 'var(--dark4)' : 'hsl(348,40%,25%)'),
+                borderRadius: '2px',
+                padding: '1.2rem',
+                position: 'relative',
+              }}>
+                {!msg.read && (
+                  <div style={{
+                    position: 'absolute',
+                    top: '1rem',
+                    right: '1rem',
+                    width: '8px',
+                    height: '8px',
+                    borderRadius: '50%',
+                    background: 'var(--cr)',
+                  }} />
+                )}
+                <div style={{
+                  fontFamily: 'var(--font-mono)',
+                  fontSize: '0.68rem',
+                  color: msg.read ? '#555' : 'var(--cr-light)',
+                  letterSpacing: '0.1em',
+                  marginBottom: '0.6rem',
+                }}>
+                  {new Date(msg.receivedAt).toLocaleDateString()} —{' '}
+                  {new Date(msg.receivedAt).toLocaleTimeString()}
+                </div>
+                <div style={{
+                  fontFamily: 'var(--font-display)',
+                  fontWeight: 700,
+                  fontSize: '0.9rem',
+                  color: 'var(--light)',
+                  marginBottom: '0.2rem',
+                }}>
+                  {msg.name}
+                </div>
+                <div style={{
+                  fontFamily: 'var(--font-mono)',
+                  fontSize: '0.72rem',
+                  color: 'var(--cr-light)',
+                  marginBottom: '0.8rem',
+                }}>
+                  {msg.email}
+                </div>
+                <p style={{
+                  fontSize: '0.88rem',
+                  color: '#aaa',
+                  lineHeight: 1.6,
+                  marginBottom: '1rem',
+                }}>
+                  {msg.message}
+                </p>
+                <div style={{ display: 'flex', gap: '0.8rem', flexWrap: 'wrap' }}>
+                  {!msg.read && (
+                    <button
+                      onClick={() => onMarkRead(msg.id)}
+                      style={{
+                        padding: '0.4rem 0.8rem',
+                        background: 'transparent',
+                        border: '1px solid var(--cr-dim)',
+                        color: 'var(--cr-light)',
+                        fontFamily: 'var(--font-mono)',
+                        fontSize: '0.72rem',
+                        letterSpacing: '0.08em',
+                        borderRadius: '1px',
+                        cursor: 'pointer',
+                      }}
+                    >
+                      ✓ Mark Read
+                    </button>
+                  )}
+                  <a
+                    href={'mailto:' + msg.email}
+                    style={{
+                      padding: '0.4rem 0.8rem',
+                      background: 'var(--cr)',
+                      color: '#fff',
+                      fontFamily: 'var(--font-mono)',
+                      fontSize: '0.72rem',
+                      letterSpacing: '0.08em',
+                      borderRadius: '1px',
+                      textDecoration: 'none',
+                      display: 'inline-block',
+                    }}
+                  >
+                    Reply
+                  </a>
+                  <button
+                    onClick={() => onDeleteMessage(msg.id)}
+                    style={{
+                      padding: '0.4rem 0.8rem',
+                      background: 'transparent',
+                      border: '1px solid #333',
+                      color: '#666',
+                      fontFamily: 'var(--font-mono)',
+                      fontSize: '0.72rem',
+                      letterSpacing: '0.08em',
+                      borderRadius: '1px',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
         {/* Pending Testimonials */}
         <AdminLabel>Pending Testimonials</AdminLabel>
         {pending.length === 0 ? (

@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import emailjs from 'emailjs-com';
 import { sanitise } from '../utils/sanitise';
 
-function Contact({ contact }) {
+function Contact({ contact, onMessage }) {
   const [form, setForm] = useState({ name: '', email: '', message: '', honeypot: '' });
   const [status, setStatus] = useState(null);
 
@@ -11,7 +11,7 @@ function Contact({ contact }) {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = e => {
+ const handleSubmit = e => {
     e.preventDefault();
     if (form.honeypot) return;
     setStatus('sending');
@@ -21,6 +21,8 @@ function Contact({ contact }) {
       email: sanitise(form.email),
       message: sanitise(form.message),
     };
+
+    onMessage(clean);
 
     emailjs.send(
       'service_4ygvl7n',

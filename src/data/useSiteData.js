@@ -3,6 +3,7 @@ import { defaultData } from './data';
 
 const STORAGE_KEY = 'aw_portfolio_v2';
 const PENDING_KEY = 'aw_pending_testimonials';
+const MESSAGES_KEY = 'aw_messages';
 
 function loadData() {
   try {
@@ -22,9 +23,19 @@ function loadPending() {
   }
 }
 
+function loadMessages() {
+  try {
+    const saved = localStorage.getItem(MESSAGES_KEY);
+    return saved ? JSON.parse(saved) : [];
+  } catch {
+    return [];
+  }
+}
+
 export function useSiteData() {
   const [data, setData] = useState(loadData);
   const [pending, setPending] = useState(loadPending);
+  const [messages, setMessages] = useState(loadMessages);
 
   const updateData = (newData) => {
     setData(newData);
@@ -76,6 +87,43 @@ export function useSiteData() {
     }
   };
 
+  const saveMessage = (msg) => {
+    const newMessages = [...messages, {
+      id: 'm' + Date.now(),
+      ...msg,
+      receivedAt: new Date().toISOString(),
+      read: false,
+    }];
+    setMessages(newMessages);
+    try {
+      localStorage.setItem(MESSAGES_KEY, JSON.stringify(newMessages));
+    } catch {
+      console.error('Could not save message');
+    }
+  };
+
+  const markMessageRead = (id) => {
+    const updated = messages.map(m =>
+      m.id === id ? { ...m, read: true } : m
+    );
+    setMessages(updated);
+    try {
+      localStorage.setItem(MESSAGES_KEY, JSON.stringify(updated));
+    } catch {
+      console.error('Could not update message');
+    }
+  };
+
+  const deleteMessage = (id) => {
+    const updated = messages.filter(m => m.id !== id);
+    setMessages(updated);
+    try {
+      localStorage.setItem(MESSAGES_KEY, JSON.stringify(updated));
+    } catch {
+      console.error('Could not delete message');
+    }
+  };
+
   const resetData = () => {
     updateData(defaultData);
   };
@@ -88,5 +136,9 @@ export function useSiteData() {
     submitTestimonial,
     approvePending,
     removePending,
+    messages,
+    saveMessage,
+    markMessageRead,
+    deleteMessage,
   };
 }

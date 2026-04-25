@@ -49,13 +49,18 @@ function applyBranding(branding) {
 }
 
 function App() {
-  const {
+const {
     data,
     updateData,
+    resetData,
     pending,
     submitTestimonial,
     approvePending,
     removePending,
+    messages,
+    saveMessage,
+    markMessageRead,
+    deleteMessage,
   } = useSiteData();
 
   const [adminOpen, setAdminOpen] = useState(false);
@@ -64,15 +69,19 @@ function App() {
     applyBranding(data.branding || {});
   }, [data.branding]);
 
-  if (adminOpen) {
+if (adminOpen) {
     return (
       <Admin
         data={data}
         onSave={updateData}
         onClose={() => setAdminOpen(false)}
+        onReset={resetData}
         pending={pending}
         onApprove={approvePending}
         onRemovePending={removePending}
+        messages={messages}
+        onMarkRead={markMessageRead}
+        onDeleteMessage={deleteMessage}
       />
     );
   }
@@ -91,7 +100,7 @@ function App() {
       case 'services':     return <Services     key={id} services={data.services} />;
       case 'timeline':     return <Timeline     key={id} timeline={data.timeline || []} />;
       case 'testimonials': return <Testimonials key={id} testimonials={data.testimonials || []} onSubmit={submitTestimonial} />;
-      case 'contact':      return <Contact      key={id} contact={data.contact} />;
+      case 'contact':      return <Contact      key={id} contact={data.contact} onMessage={saveMessage} />;
       default:             return null;
     }
   };
