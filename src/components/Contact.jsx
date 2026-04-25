@@ -1,9 +1,11 @@
+import { contactSchema, validate } from '../utils/validation';
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import emailjs from 'emailjs-com';
 import { sanitise } from '../utils/sanitise';
 
 function Contact({ contact, onMessage }) {
+  const [errors, setErrors] = useState({});
   const [form, setForm] = useState({ name: '', email: '', message: '', honeypot: '' });
   const [status, setStatus] = useState(null);
 
@@ -11,9 +13,22 @@ function Contact({ contact, onMessage }) {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
- const handleSubmit = e => {
+const handleSubmit = e => {
     e.preventDefault();
     if (form.honeypot) return;
+
+    const { valid, errors: validationErrors } = validate(contactSchema, {
+      name: form.name,
+      email: form.email,
+      message: form.message,
+    });
+
+    if (!valid) {
+      setErrors(validationErrors);
+      return;
+    }
+
+    setErrors({});
     setStatus('sending');
 
     const clean = {
@@ -201,13 +216,14 @@ function Contact({ contact, onMessage }) {
               />
             </div>
 
-            <ContactField
+<ContactField
               label="Name"
               type="text"
               name="name"
               placeholder="Your name"
               value={form.name}
               onChange={handleChange}
+              error={errors.name}
             />
 
             <ContactField
@@ -217,6 +233,7 @@ function Contact({ contact, onMessage }) {
               placeholder="your@email.com"
               value={form.email}
               onChange={handleChange}
+              error={errors.email}
             />
 
             <div style={{ marginBottom: '1.2rem' }}>
@@ -224,7 +241,7 @@ function Contact({ contact, onMessage }) {
                 display: 'block',
                 fontFamily: 'var(--font-mono)',
                 fontSize: '0.7rem',
-                color: '#666',
+                color: errors.message ? 'var(--cr-light)' : '#666',
                 letterSpacing: '0.12em',
                 textTransform: 'uppercase',
                 marginBottom: '0.4rem',
@@ -236,12 +253,11 @@ function Contact({ contact, onMessage }) {
                 placeholder="Tell me about your project..."
                 value={form.message}
                 onChange={handleChange}
-                required
                 rows={5}
                 style={{
                   width: '100%',
                   background: 'var(--dark)',
-                  border: '1px solid var(--dark4)',
+                  border: '1px solid ' + (errors.message ? 'var(--cr-dim)' : 'var(--dark4)'),
                   color: 'var(--light)',
                   padding: '0.8rem 1rem',
                   fontFamily: 'var(--font-display)',
@@ -252,6 +268,17 @@ function Contact({ contact, onMessage }) {
                   minHeight: '120px',
                 }}
               />
+              {errors.message && (
+                <div style={{
+                  fontFamily: 'var(--font-mono)',
+                  fontSize: '0.68rem',
+                  color: 'var(--cr-light)',
+                  marginTop: '0.3rem',
+                  letterSpacing: '0.05em',
+                }}>
+                  {errors.message}
+                </div>
+              )}
             </div>
 
             <SubmitButton status={status} />
@@ -296,17 +323,18 @@ function Contact({ contact, onMessage }) {
   );
 }
 
-function ContactField({ label, type, name, placeholder, value, onChange }) {
+function ContactField({ label, type, name, placeholder, value, onChange, error }) {
   return (
     <div style={{ marginBottom: '1.2rem' }}>
       <label style={{
         display: 'block',
         fontFamily: 'var(--font-mono)',
         fontSize: '0.7rem',
-        color: '#666',
+        color: error ? 'var(--cr-light)' : '#666',
         letterSpacing: '0.12em',
         textTransform: 'uppercase',
         marginBottom: '0.4rem',
+        transition: 'color 0.2s',
       }}>
         {label}
       </label>
@@ -316,19 +344,30 @@ function ContactField({ label, type, name, placeholder, value, onChange }) {
         placeholder={placeholder}
         value={value}
         onChange={onChange}
-        required
         style={{
           width: '100%',
           background: 'var(--dark)',
-          border: '1px solid var(--dark4)',
+          border: '1px solid ' + (error ? 'var(--cr-dim)' : 'var(--dark4)'),
           color: 'var(--light)',
           padding: '0.8rem 1rem',
           fontFamily: 'var(--font-display)',
           fontSize: 'clamp(0.85rem, 2vw, 0.9rem)',
           borderRadius: '1px',
           outline: 'none',
+          transition: 'border-color 0.2s',
         }}
       />
+      {error && (
+        <div style={{
+          fontFamily: 'var(--font-mono)',
+          fontSize: '0.68rem',
+          color: 'var(--cr-light)',
+          marginTop: '0.3rem',
+          letterSpacing: '0.05em',
+        }}>
+          {error}
+        </div>
+      )}
     </div>
   );
 }

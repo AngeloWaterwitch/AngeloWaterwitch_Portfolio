@@ -1,7 +1,9 @@
+import { testimonialSchema, validate } from '../utils/validation';
 import React, { useState } from 'react';
 import { sanitise } from '../utils/sanitise';
 
 function TestimonialSubmit({ onSubmit, onClose }) {
+  const [errors, setErrors] = useState({});
   const [form, setForm] = useState({ author: '', role: '', quote: '' });
   const [status, setStatus] = useState(null);
 
@@ -11,7 +13,19 @@ function TestimonialSubmit({ onSubmit, onClose }) {
 
 const handleSubmit = e => {
     e.preventDefault();
-    if (!form.author || !form.quote) return;
+
+    const { valid, errors: validationErrors } = validate(testimonialSchema, {
+      author: form.author,
+      role: form.role,
+      quote: form.quote,
+    });
+
+    if (!valid) {
+      setErrors(validationErrors);
+      return;
+    }
+
+    setErrors({});
     onSubmit({
       author: sanitise(form.author),
       role: sanitise(form.role),
@@ -162,6 +176,17 @@ const handleSubmit = e => {
               />
             </div>
 
+                {errors.author && (
+                <div style={{
+                  fontFamily: 'var(--font-mono)',
+                  fontSize: '0.68rem',
+                  color: 'var(--cr-light)',
+                  marginTop: '0.3rem',
+                }}>
+                  {errors.author}
+                </div>
+              )}
+
             <div style={{ marginBottom: '1.2rem' }}>
               <label style={{
                 display: 'block',
@@ -228,6 +253,17 @@ const handleSubmit = e => {
                 }}
               />
             </div>
+
+              {errors.quote && (
+                <div style={{
+                  fontFamily: 'var(--font-mono)',
+                  fontSize: '0.68rem',
+                  color: 'var(--cr-light)',
+                  marginTop: '0.3rem',
+                }}>
+                  {errors.quote}
+                </div>
+              )}
 
             <button
               type="submit"

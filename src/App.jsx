@@ -12,6 +12,7 @@ import Testimonials from './components/Testimonials';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
 import Admin from './admin/Admin';
+import { HeroSkeleton, SectionSkeleton, CardsSkeleton, SkillsSkeleton } from './components/Skeleton';
 
 const FONT_LINKS = {
   'Syne':             'https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&display=swap',
@@ -49,7 +50,7 @@ function applyBranding(branding) {
 }
 
 function App() {
-const {
+  const {
     data,
     updateData,
     resetData,
@@ -64,12 +65,18 @@ const {
   } = useSiteData();
 
   const [adminOpen, setAdminOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     applyBranding(data.branding || {});
   }, [data.branding]);
 
-if (adminOpen) {
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (adminOpen) {
     return (
       <Admin
         data={data}
@@ -92,6 +99,16 @@ if (adminOpen) {
     const visible = data.sections.find(s => s.id === id)?.visible;
     if (!visible) return null;
 
+    if (loading) {
+      switch (id) {
+        case 'home':         return <HeroSkeleton key={id + '-sk'} />;
+        case 'skills':       return <SkillsSkeleton key={id + '-sk'} />;
+        case 'projects':     return <CardsSkeleton key={id + '-sk'} count={4} />;
+        case 'testimonials': return <CardsSkeleton key={id + '-sk'} count={4} />;
+        default:             return <SectionSkeleton key={id + '-sk'} />;
+      }
+    }
+
     switch (id) {
       case 'home':         return <Hero         key={id} hero={data.hero} />;
       case 'about':        return <About        key={id} about={data.about} />;
@@ -105,7 +122,7 @@ if (adminOpen) {
     }
   };
 
-return (
+  return (
     <div style={{ background: 'var(--dark)', minHeight: '100vh' }}>
       <SEO seo={data.seo} branding={data.branding} />
       <Navbar
